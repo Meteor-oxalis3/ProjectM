@@ -1,0 +1,138 @@
+from os.path import join, abspath
+import pandas as pd
+from pathlib import Path
+import re
+
+# 命令行传参: 样本信息文件路径
+args_metadata = Path(config["metadata"])
+
+# 命令行传参: UUID作为一次任务的唯一标识符
+args_uuid = config["uuid"]
+
+# 命令行传参: 物种 
+# (可选：hg38)
+args_ref = config["ref"]
+
+# # 命令行传参: rRNA去除速度
+# # (可选：fast, default, sensitive)
+# # 默认是default
+# args_sortmerna_speed = config.get("sortmerna_speed", "default")
+
+# 命令行传参: LEfSe LDA阈值
+# (可选，默认是2.5)
+args_lefse_LDA = config.get("lefse_LDA", 2.5)
+
+# 命令行传参: LEfSe分类水平
+# (可选，默认是species)
+args_lefse_level = config.get("lefse_level", "s") + "__"
+
+# 定义目录
+# DATA_DIR = "/ProjectM/raw_data"
+ROOT_DIR = "/ProjectM"
+SCRIPT_DIR = f"{ROOT_DIR}/scripts"
+OUTPUT_DIR = f"{ROOT_DIR}/output/{args_uuid}"
+REF_DIR = f"{ROOT_DIR}/db/reference/{args_ref}"
+KRAKEN2_DB_DIR= f"{ROOT_DIR}/db/kraken2"
+
+
+# 全局参数
+thread_fastqc = 1
+thread_fastp = 10
+thread_bwa = 30
+# thread_sortmerna = 20
+thread_kraken2 = 30
+thread_megahit = 30
+thread_prodigal = 10
+thread_metaquast = 10
+
+##################################################################################
+# 读取csv,以逗号分隔
+# 样本信息文件应包含ID, fastq1, fastq2, group
+# 其中ID为样本唯一标识符，fastq1和fastq2为对应的FASTQ文件路径，group为样本分组信息
+# 示例: ID,fastq1,fastq2,group
+#       sample1,/path/to/sample1_1.fastq.gz,/path/to/sample1_2.fastq.gz,group1
+#       sample2,/path/to/sample2_1.fastq.gz,/path/to/sample2_2.fastq.gz,group2
+#       ...
+#       sampleN,/path/to/sampleN_1.fastq.gz,/path/to/sampleN_2.fastq.gz,groupN
+# 注意: fastq1和fastq2的路径可以是绝对路径或相对路径
+#       如果是相对路径，则相对于Snakefile所在目录
+#       如果是绝对路径，则直接使用完整路径
+#       group可以是任意字符串，用于样本分组
+
+# 读取样本信息文件,去除空格
+samples = pd.read_csv(args_metadata)
+samples.columns = samples.columns.str.strip()
+samples = samples.map(lambda x: re.sub(r"\s+", "", x) if isinstance(x, str) else x)
+
+# 覆盖
+samples.to_csv(args_metadata, index=False)
+
+# 将samples信息变成字典，方便在规则中引用
+# 转换成绝对路径
+sample_info = {
+    row.ID: {
+        "fastq1": str(Path(row.fastq1).resolve()),
+        "fastq2": str(Path(row.fastq2).resolve()),
+        "group": row.group
+        } for idx, row in samples.iterrows()
+}
+
+# 定义所有样本的列表，方便rule all
+list_ID = list(sample_info.keys())
+list_fastq1 = [info["fastq1"] for info in sample_info.values()]
+list_fastq2 = [info["fastq2"] for info in sample_info.values()]
+# 定义样本组
+list_group = list(samples["group"].unique())
+
+# 用于 LEfSe 过滤的正则表达式
+lefse_pattern = "(" + "|".join(list_group) + ")"
+
+# 定义样本组字典
+group_dict = {group: samples[samples["group"] == group]["ID"].tolist() for group in list_group}
+
+# 定义数据库文件路径
+# 注意: 这里的数据库文件路径需要在 docker 镜像初始化时挂载
+# SORTMERNA_DB_FILE = f"{ROOT_DIR}/db/sortmerna/smr_v4.3_{args_sortmerna_speed}_db.fasta"
+METAQUAST_DB_SILVA_DIR = f"{ROOT_DIR}/db/metaquast/silva"
+
+# 测试命令
+# /micromamba/envs/ProjectM/bin/snakemake -s /root/ProjectM/snakemake/Snakefile --config ref=hg38 uuid="test" metadata="/root/ProjectM/saliva_samples.csv" --cores 100 --quiet
+
+rule all:
+    # 定义最终需要生成的所有文件
+    # 这里使用expand函数生成所有样本的fastq文件
+    # 注意: 虽然是input，但实际上是output
+    input:
+        expand(f"{OUTPUT_DIR}/01_fastqc_raw/{{sample}}_1_fastqc.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/01_fastqc_raw/{{sample}}_2_fastqc.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/02_fastp/Fastp_{{sample}}.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/03_fastqc_clean/clean_{{sample}}_1_fastqc.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/03_fastqc_clean/clean_{{sample}}_2_fastqc.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/04_bwa_host/bwa_host_{{sample}}.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/05_bwa_phix/bwa_phix_{{sample}}.log", sample=list_ID),
+        # expand(f"{OUTPUT_DIR}/06_sortmerna/sortmerna_{{sample}}.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/06_kraken2/kraken2_{{sample}}.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/07_kreport2mpa/kreport2mpa_{{sample}}.log", sample=list_ID),
+        f"{OUTPUT_DIR}/08_mpa2matrix/mpa_group_added_matrix.tsv",
+        f"{OUTPUT_DIR}/09_lefse/cladogram.pdf",
+        expand(f"{OUTPUT_DIR}/10_megahit/megahit_{{sample}}.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/11_prodigal/prodigal_{{sample}}.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/12_metaquast/metaquast_{{sample}}.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/13_krona/{{sample}}_krona.html", sample=list_ID)
+        
+
+include: "rules/00_link_fastq.smk"
+include: "rules/01_fastqc_raw.smk"
+include: "rules/02_fastp.smk"
+include: "rules/03_fastqc_clean.smk"
+include: "rules/04_bwa_host.smk"
+include: "rules/05_bwa_phix.smk"
+# include: "rules/06_sortmerna.smk"
+include: "rules/06_kraken2.smk"
+include: "rules/07_kreport2mpa.smk"
+include: "rules/08_mpa2matrix.smk"
+include: "rules/09_lefse.smk"
+include: "rules/10_megahit.smk"
+include: "rules/11_prodigal.smk"
+include: "rules/12_metaquast.smk"
+include: "rules/13_krona.smk"

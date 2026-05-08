@@ -123,8 +123,13 @@ rule all:
         expand(f"{OUTPUT_DIR}/13_krona/{{sample}}_krona.html", sample=list_ID),
         expand(f"{OUTPUT_DIR}/14_megahit_merged/{{group}}_merged_1.fastq.gz", group=list_group),
         expand(f"{OUTPUT_DIR}/14_megahit_merged/{{group}}_merged_2.fastq.gz", group=list_group),
-        expand(f"{OUTPUT_DIR}/15_megahit_group/{{group}}/final.contigs.fa", group=list_group)
-        
+        expand(f"{OUTPUT_DIR}/15_megahit_group/{{group}}/final.contigs.fa", group=list_group),
+        f"{OUTPUT_DIR}/16_alpha_diversity/alpha_diversity.pdf",
+        f"{OUTPUT_DIR}/17_beta_diversity/beta_diversity_pcoa.pdf",
+        f"{OUTPUT_DIR}/18_stacked_bar/stacked_bar.pdf",
+        f"{OUTPUT_DIR}/19_heatmap/heatmap.pdf",
+        f"{OUTPUT_DIR}/20_differential_boxplot/differential_boxplot.pdf"
+
 
 include: "rules/00_link_fastq.smk"
 include: "rules/01_fastqc_raw.smk"
@@ -143,3 +148,8 @@ include: "rules/12_metaquast.smk"
 include: "rules/13_krona.smk"
 include: "rules/14_merge_group_fastq.smk"
 include: "rules/15_megahit_group.smk"
+include: "rules/16_alpha_diversity.smk"
+include: "rules/17_beta_diversity.smk"
+include: "rules/18_stacked_bar.smk"
+include: "rules/19_heatmap.smk"
+include: "rules/20_differential_boxplot.smk"

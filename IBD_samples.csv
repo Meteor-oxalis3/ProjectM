@@ -1,0 +1,9 @@
+ID,fastq1,fastq2,group
+M2026C1_MGX,/ProjectM/raw_data/IBD/SRR5947819_1.fastq.gz,/ProjectM/raw_data/IBD/SRR5947819_2.fastq.gz,UC
+M2026C2_MGX,/ProjectM/raw_data/IBD/SRR5947837_1.fastq.gz,/ProjectM/raw_data/IBD/SRR5947837_2.fastq.gz,UC
+M2026C3_MGX,/ProjectM/raw_data/IBD/SRR5947861_1.fastq.gz,/ProjectM/raw_data/IBD/SRR5947861_2.fastq.gz,UC
+M2026C4_MGX,/ProjectM/raw_data/IBD/SRR5947824_1.fastq.gz,/ProjectM/raw_data/IBD/SRR5947824_2.fastq.gz,UC
+M2026C7_MGX,/ProjectM/raw_data/IBD/SRR5947881_1.fastq.gz,/ProjectM/raw_data/IBD/SRR5947881_2.fastq.gz,UC
+H4008C1_MGX,/ProjectM/raw_data/IBD/SRR5947872_1.fastq.gz,/ProjectM/raw_data/IBD/SRR5947872_2.fastq.gz,nonIBD
+H4008C2_MGX,/ProjectM/raw_data/IBD/SRR5947879_1.fastq.gz,/ProjectM/raw_data/IBD/SRR5947879_2.fastq.gz,nonIBD
+H4008C3_MGX,/ProjectM/raw_data/IBD/SRR5947810_1.fastq.gz,/ProjectM/raw_data/IBD/SRR5947810_2.fastq.gz,nonIBD

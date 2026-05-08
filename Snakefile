@@ -89,6 +89,8 @@ lefse_pattern = "(" + "|".join(list_group) + ")"
 
 # 定义样本组字典
 group_dict = {group: samples[samples["group"] == group]["ID"].tolist() for group in list_group}
+# print("Sample groups and their samples:", group_dict)
+# print("Sample groups and their samples:", group_dict)
 
 # 定义数据库文件路径
 # 注意: 这里的数据库文件路径需要在 docker 镜像初始化时挂载
@@ -118,7 +120,10 @@ rule all:
         expand(f"{OUTPUT_DIR}/10_megahit/megahit_{{sample}}.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/11_prodigal/prodigal_{{sample}}.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/12_metaquast/metaquast_{{sample}}.log", sample=list_ID),
-        expand(f"{OUTPUT_DIR}/13_krona/{{sample}}_krona.html", sample=list_ID)
+        expand(f"{OUTPUT_DIR}/13_krona/{{sample}}_krona.html", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/14_megahit_merged/{{group}}_merged_1.fastq.gz", group=list_group),
+        expand(f"{OUTPUT_DIR}/14_megahit_merged/{{group}}_merged_2.fastq.gz", group=list_group),
+        expand(f"{OUTPUT_DIR}/15_megahit_group/{{group}}/final.contigs.fa", group=list_group)
         
 
 include: "rules/00_link_fastq.smk"
@@ -136,3 +141,5 @@ include: "rules/10_megahit.smk"
 include: "rules/11_prodigal.smk"
 include: "rules/12_metaquast.smk"
 include: "rules/13_krona.smk"
+include: "rules/14_merge_group_fastq.smk"
+include: "rules/15_megahit_group.smk"

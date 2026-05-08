@@ -1,0 +1,6 @@
+.snakemake/
+bin/
+db/
+output/
+raw_data/
+test.html

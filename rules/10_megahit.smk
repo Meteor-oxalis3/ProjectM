@@ -16,7 +16,6 @@ rule megahit:
         -o {OUTPUT_DIR}/10_megahit/{wildcards.sample} \
         -t {thread_megahit} \
         > {output.megahit_log} 2>&1;
-        rm {OUTPUT_DIR}/10_megahit/{wildcards.sample}/log;
         ln -s {OUTPUT_DIR}/10_megahit/{wildcards.sample}/final.contigs.fa {output.contigs};
         echo "Finished MEGAHIT for {wildcards.sample}";
         """

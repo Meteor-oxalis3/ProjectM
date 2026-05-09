@@ -128,7 +128,15 @@ rule all:
         f"{OUTPUT_DIR}/17_beta_diversity/beta_diversity_pcoa.pdf",
         f"{OUTPUT_DIR}/18_stacked_bar/stacked_bar.pdf",
         f"{OUTPUT_DIR}/19_heatmap/heatmap.pdf",
-        f"{OUTPUT_DIR}/20_differential_boxplot/differential_boxplot.pdf"
+        f"{OUTPUT_DIR}/20_differential_boxplot/differential_boxplot.pdf",
+        # MAG binning
+        # expand(f"{OUTPUT_DIR}/21_mag_bins/{{group}}/depth.txt",   group=list_group),
+        # expand(f"{OUTPUT_DIR}/22_busco/{{group}}/busco_summary.tsv", group=list_group),
+        # Functional annotation
+        expand(f"{OUTPUT_DIR}/24_prokka/{{group}}/{{group}}.gff", group=list_group),
+        f"{OUTPUT_DIR}/25_prokka_plot/prokka_feature_counts.pdf",
+        # GTDB-Tk (requires database setup — uncomment when ready):
+        # expand(f"{OUTPUT_DIR}/23_gtdbtk/{{group}}/gtdbtk.bac120.summary.tsv", group=list_group),
 
 
 include: "rules/00_link_fastq.smk"
@@ -153,3 +161,8 @@ include: "rules/17_beta_diversity.smk"
 include: "rules/18_stacked_bar.smk"
 include: "rules/19_heatmap.smk"
 include: "rules/20_differential_boxplot.smk"
+# include: "rules/21_mag_bin.smk"
+# include: "rules/22_busco_bins.smk"
+# include: "rules/23_gtdbtk_bins.smk"
+include: "rules/24_prokka_group.smk"
+include: "rules/25_prokka_plot.smk"

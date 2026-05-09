@@ -284,6 +284,7 @@ dependencies:
   - r-cellranger=1.1.0=r45hc72bb7e_1008
   - r-cli=3.6.5=r45h3697838_1
   - r-clipr=0.8.0=r45hc72bb7e_4
+  - r-cluster=2.1.8.2=r45heaba542_0
   - r-colorspace=2.1_2=r45h54b55ab_0
   - r-conflicted=1.2.0=r45h785f33e_3
   - r-cpp11=0.5.4=r45h785f33e_0
@@ -322,15 +323,21 @@ dependencies:
   - r-jsonlite=2.0.0=r45h54b55ab_1
   - r-knitr=1.51=r45hc72bb7e_0
   - r-labeling=0.4.3=r45hc72bb7e_2
+  - r-lattice=0.22_9=r45h54b55ab_0
   - r-lifecycle=1.0.5=r45hc72bb7e_0
   - r-lubridate=1.9.5=r45h54b55ab_0
   - r-magrittr=2.0.5=r45h54b55ab_0
+  - r-mass=7.3_65=r45h54b55ab_0
+  - r-matrix=1.7_5=r45h0e4624f_0
   - r-memoise=2.0.1=r45hc72bb7e_4
+  - r-mgcv=1.9_4=r45h0e4624f_0
   - r-mime=0.13=r45h54b55ab_1
   - r-modelr=0.1.11=r45hc72bb7e_3
   - r-munsell=0.5.1=r45hc72bb7e_2
+  - r-nlme=3.1_169=r45heaba542_0
   - r-openssl=2.3.5=r45h68c19f5_0
   - r-optparse=1.7.5=r45hc72bb7e_2
+  - r-permute=0.9_10=r45hc72bb7e_0
   - r-pillar=1.11.1=r45hc72bb7e_0
   - r-pkgconfig=2.0.3=r45hc72bb7e_5
   - r-prettyunits=1.2.0=r45hc72bb7e_2
@@ -370,6 +377,7 @@ dependencies:
   - r-utf8=1.2.6=r45h54b55ab_1
   - r-uuid=1.2_2=r45h54b55ab_0
   - r-vctrs=0.7.2=r45h3697838_0
+  - r-vegan=2.7_3=r45h11cdb10_0
   - r-viridislite=0.4.3=r45hc72bb7e_0
   - r-vroom=1.7.1=r45h3697838_0
   - r-withr=3.0.2=r45hc72bb7e_1

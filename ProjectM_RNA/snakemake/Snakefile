@@ -13,10 +13,15 @@ args_uuid = config["uuid"]
 # (可选：hg38)
 args_ref = config["ref"]
 
-# # 命令行传参: rRNA去除速度
-# # (可选：fast, default, sensitive)
-# # 默认是default
-# args_sortmerna_speed = config.get("sortmerna_speed", "default")
+# 命令行传参: rRNA去除速度
+# (可选：fast, default, sensitive)
+# 默认是default
+args_sortmerna_speed = config.get("sortmerna_speed", "default")
+
+# 命令行传参: eggNOG数据库路径 + 分类范围
+# (可选，有数据库则离线运行; --data_dir)
+args_eggnog_data_dir = config.get("eggnog_data_dir", "")
+args_eggnog_tax_scope = config.get("eggnog_tax_scope", "prokaryota_broad")
 
 # 命令行传参: LEfSe LDA阈值
 # (可选，默认是2.5)
@@ -28,7 +33,7 @@ args_lefse_level = config.get("lefse_level", "s") + "__"
 
 # 定义目录
 # DATA_DIR = "/ProjectM/raw_data"
-ROOT_DIR = "/ProjectM"
+ROOT_DIR = "/ProjectM/ProjectM_RNA"
 SCRIPT_DIR = f"{ROOT_DIR}/scripts"
 OUTPUT_DIR = f"{ROOT_DIR}/output/{args_uuid}"
 REF_DIR = f"{ROOT_DIR}/db/reference/{args_ref}"
@@ -39,11 +44,14 @@ KRAKEN2_DB_DIR= f"{ROOT_DIR}/db/kraken2"
 thread_fastqc = 1
 thread_fastp = 10
 thread_bwa = 30
-# thread_sortmerna = 20
+thread_sortmerna = 20
 thread_kraken2 = 30
 thread_megahit = 30
 thread_prodigal = 10
 thread_metaquast = 10
+thread_cdhit = 10  # CD-HIT线程数
+mem_cdhit = 10000  # CD-HIT内存限制，单位MB
+thread_eggnog = 10  # eggNOG-mapper线程数
 
 ##################################################################################
 # 读取csv,以逗号分隔
@@ -89,12 +97,10 @@ lefse_pattern = "(" + "|".join(list_group) + ")"
 
 # 定义样本组字典
 group_dict = {group: samples[samples["group"] == group]["ID"].tolist() for group in list_group}
-# print("Sample groups and their samples:", group_dict)
-# print("Sample groups and their samples:", group_dict)
 
 # 定义数据库文件路径
 # 注意: 这里的数据库文件路径需要在 docker 镜像初始化时挂载
-# SORTMERNA_DB_FILE = f"{ROOT_DIR}/db/sortmerna/smr_v4.3_{args_sortmerna_speed}_db.fasta"
+SORTMERNA_DB_FILE = f"{ROOT_DIR}/db/sortmerna/smr_v4.3_{args_sortmerna_speed}_db.fasta"
 METAQUAST_DB_SILVA_DIR = f"{ROOT_DIR}/db/metaquast/silva"
 
 # 测试命令
@@ -105,38 +111,33 @@ rule all:
     # 这里使用expand函数生成所有样本的fastq文件
     # 注意: 虽然是input，但实际上是output
     input:
-        expand(f"{OUTPUT_DIR}/01_fastqc_raw/{{sample}}_1_fastqc.log", sample=list_ID),
-        expand(f"{OUTPUT_DIR}/01_fastqc_raw/{{sample}}_2_fastqc.log", sample=list_ID),
+        # expand(f"{OUTPUT_DIR}/01_fastqc_raw/{{sample}}_1_fastqc.log", sample=list_ID),
+        # expand(f"{OUTPUT_DIR}/01_fastqc_raw/{{sample}}_2_fastqc.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/02_fastp/Fastp_{{sample}}.log", sample=list_ID),
-        expand(f"{OUTPUT_DIR}/03_fastqc_clean/clean_{{sample}}_1_fastqc.log", sample=list_ID),
-        expand(f"{OUTPUT_DIR}/03_fastqc_clean/clean_{{sample}}_2_fastqc.log", sample=list_ID),
+        # expand(f"{OUTPUT_DIR}/03_fastqc_clean/clean_{{sample}}_1_fastqc.log", sample=list_ID),
+        # expand(f"{OUTPUT_DIR}/03_fastqc_clean/clean_{{sample}}_2_fastqc.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/04_bwa_host/bwa_host_{{sample}}.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/05_bwa_phix/bwa_phix_{{sample}}.log", sample=list_ID),
-        # expand(f"{OUTPUT_DIR}/06_sortmerna/sortmerna_{{sample}}.log", sample=list_ID),
-        expand(f"{OUTPUT_DIR}/06_kraken2/kraken2_{{sample}}.log", sample=list_ID),
-        expand(f"{OUTPUT_DIR}/07_kreport2mpa/kreport2mpa_{{sample}}.log", sample=list_ID),
-        f"{OUTPUT_DIR}/08_mpa2matrix/mpa_group_added_matrix.tsv",
-        f"{OUTPUT_DIR}/09_lefse/cladogram.pdf",
-        expand(f"{OUTPUT_DIR}/10_megahit/megahit_{{sample}}.log", sample=list_ID),
-        expand(f"{OUTPUT_DIR}/11_prodigal/prodigal_{{sample}}.log", sample=list_ID),
-        expand(f"{OUTPUT_DIR}/12_metaquast/metaquast_{{sample}}.log", sample=list_ID),
-        expand(f"{OUTPUT_DIR}/13_krona/{{sample}}_krona.html", sample=list_ID),
-        expand(f"{OUTPUT_DIR}/14_megahit_merged/{{group}}_merged_1.fastq.gz", group=list_group),
-        expand(f"{OUTPUT_DIR}/14_megahit_merged/{{group}}_merged_2.fastq.gz", group=list_group),
-        expand(f"{OUTPUT_DIR}/15_megahit_group/{{group}}/final.contigs.fa", group=list_group),
-        f"{OUTPUT_DIR}/16_alpha_diversity/alpha_diversity.pdf",
-        f"{OUTPUT_DIR}/17_beta_diversity/beta_diversity_pcoa.pdf",
-        f"{OUTPUT_DIR}/18_stacked_bar/stacked_bar.pdf",
-        f"{OUTPUT_DIR}/19_heatmap/heatmap.pdf",
-        f"{OUTPUT_DIR}/20_differential_boxplot/differential_boxplot.pdf",
-        f"{OUTPUT_DIR}/26_rarefaction_curve/rarefaction_curve.pdf",
-        # MAG binning
-        # expand(f"{OUTPUT_DIR}/21_mag_bins/{{group}}/depth.txt",   group=list_group),
-        # expand(f"{OUTPUT_DIR}/22_busco/{{group}}/busco_summary.tsv", group=list_group),
-        # Functional annotation
-        expand(f"{OUTPUT_DIR}/24_prokka/{{group}}/{{group}}.gff", group=list_group),
-        f"{OUTPUT_DIR}/25_prokka_plot/prokka_feature_counts.pdf",
-
+        expand(f"{OUTPUT_DIR}/06_sortmerna/sortmerna_{{sample}}.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/07_kraken2/kraken2_{{sample}}.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/08_kreport2mpa/kreport2mpa_{{sample}}.log", sample=list_ID),
+        f"{OUTPUT_DIR}/09_mpa2matrix/mpa_group_added_matrix.tsv",
+        f"{OUTPUT_DIR}/10_lefse/cladogram.pdf",
+        expand(f"{OUTPUT_DIR}/11_megahit/megahit_{{sample}}.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/12_prodigal/prodigal_{{sample}}.log", sample=list_ID),
+        # expand(f"{OUTPUT_DIR}/13_metaquast/metaquast_{{sample}}.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/14_cdhit/cdhit_{{sample}}_faa.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/14_cdhit/cdhit_{{sample}}_fna.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/15_eggnog_mapper/{{sample}}.emapper.annotations", sample=list_ID),
+        f"{OUTPUT_DIR}/17_ko_matrix/ko_group_added_matrix.tsv",
+        f"{OUTPUT_DIR}/18_ko_heatmap/ko_heatmap.pdf",
+        f"{OUTPUT_DIR}/19_ko_volcano/ko_volcano.pdf",
+        f"{OUTPUT_DIR}/20_alpha_diversity/alpha_diversity.pdf",
+        f"{OUTPUT_DIR}/21_beta_diversity/beta_diversity_pcoa.pdf",
+        f"{OUTPUT_DIR}/22_stacked_bar/stacked_bar.pdf",
+        f"{OUTPUT_DIR}/23_species_heatmap/species_heatmap.pdf",
+        f"{OUTPUT_DIR}/24_differential_boxplot/differential_boxplot.pdf",
+        f"{OUTPUT_DIR}/25_rarefaction_curve/rarefaction_curve.pdf",
 
 include: "rules/00_link_fastq.smk"
 include: "rules/01_fastqc_raw.smk"
@@ -144,24 +145,22 @@ include: "rules/02_fastp.smk"
 include: "rules/03_fastqc_clean.smk"
 include: "rules/04_bwa_host.smk"
 include: "rules/05_bwa_phix.smk"
-# include: "rules/06_sortmerna.smk"
-include: "rules/06_kraken2.smk"
-include: "rules/07_kreport2mpa.smk"
-include: "rules/08_mpa2matrix.smk"
-include: "rules/09_lefse.smk"
-include: "rules/10_megahit.smk"
-include: "rules/11_prodigal.smk"
-include: "rules/12_metaquast.smk"
-include: "rules/13_krona.smk"
-include: "rules/14_merge_group_fastq.smk"
-include: "rules/15_megahit_group.smk"
-include: "rules/16_alpha_diversity.smk"
-include: "rules/17_beta_diversity.smk"
-include: "rules/18_stacked_bar.smk"
-include: "rules/19_heatmap.smk"
-include: "rules/20_differential_boxplot.smk"
-include: "rules/26_rarefaction_curve.smk"
-# include: "rules/21_mag_bin.smk"
-# include: "rules/22_busco_bins.smk"
-include: "rules/24_prokka_group.smk"
-include: "rules/25_prokka_plot.smk"
+include: "rules/06_sortmerna.smk"
+include: "rules/07_kraken2.smk"
+include: "rules/08_kreport2mpa.smk"
+include: "rules/09_mpa2matrix.smk"
+include: "rules/10_lefse.smk"
+include: "rules/11_megahit.smk"
+include: "rules/12_prodigal.smk"
+include: "rules/13_metaquast.smk"
+include: "rules/14_cdhit.smk"
+include: "rules/15_eggnog_mapper.smk"
+include: "rules/17_ko_matrix.smk"
+include: "rules/18_ko_heatmap.smk"
+include: "rules/19_ko_volcano.smk"
+include: "rules/20_alpha_diversity.smk"
+include: "rules/21_beta_diversity.smk"
+include: "rules/22_stacked_bar.smk"
+include: "rules/23_species_heatmap.smk"
+include: "rules/24_differential_boxplot.smk"
+include: "rules/25_rarefaction_curve.smk"

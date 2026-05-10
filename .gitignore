@@ -5,3 +5,7 @@ output/
 raw_data/
 test.html
 busco_downloads/
+ProjectM_RNA/db
+ProjectM_RNA/snakemake/output/
+ProjectM_RNA/.snakemake/
+*.txt

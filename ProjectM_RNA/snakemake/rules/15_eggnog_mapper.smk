@@ -1,12 +1,13 @@
 rule eggnog_mapper:
     """
-    eggNOG-mapper functional annotation of CD-HIT clustered protein sequences.
+    eggNOG-mapper functional annotation of CD-HIT clustered protein sequences
+    (offline mode only — requires local eggNOG database).
 
     PREREQUISITES:
-      1. Download eggNOG database (~20 GB for bacteria, ~50 GB for all):
+      1. Download eggNOG database:
            download_eggnog_data.py --data_dir /path/to/eggnog_db
-      2. Set `eggnog_db` in snakemake config, e.g.:
-           --config eggnog_db=/path/to/eggnog_db
+      2. Set `eggnog_data_dir` in snakemake config:
+           --config eggnog_data_dir=/path/to/eggnog_db
 
     Output per sample: .emapper.annotations file containing KO, GO, COG, etc.
     """
@@ -17,25 +18,26 @@ rule eggnog_mapper:
         log         = f"{OUTPUT_DIR}/15_eggnog_mapper/eggnog_{{sample}}.log"
     params:
         out_prefix = lambda wildcards: f"{OUTPUT_DIR}/15_eggnog_mapper/{wildcards.sample}",
-        data_dir   = config.get("eggnog_data_dir", ""),
         tax_scope  = config.get("eggnog_tax_scope", "prokaryota_broad")
     threads: thread_prodigal
     shell:
         """
-        mkdir -p {OUTPUT_DIR}/15_eggnog_mapper
-        echo "Running eggNOG-mapper for {wildcards.sample}..."
-
-        DATA_DIR_ARG=""
-        if [ -n "{params.data_dir}" ] && [ -d "{params.data_dir}" ]; then
-            DATA_DIR_ARG="--data_dir {params.data_dir}"
+        if [ -z "{EGGNOG_DB_DIR}" ] || [ ! -d "{EGGNOG_DB_DIR}" ]; then
+            echo "ERROR: eggNOG data directory not found: {EGGNOG_DB_DIR}" >&2
+            echo "Download with: download_eggnog_data.py --data_dir /path/to/eggnog_db" >&2
+            echo "Then set EGGNOG_DB_DIR in Snakefile" >&2
+            exit 1
         fi
+
+        mkdir -p {OUTPUT_DIR}/15_eggnog_mapper
+        echo "Running eggNOG-mapper for {wildcards.sample} (offline, data_dir={EGGNOG_DB_DIR})..."
 
         micromamba run -n eggnog emapper.py \
             -i {input.faa} \
             --output {params.out_prefix} \
             --cpu {threads} \
             --tax_scope {params.tax_scope} \
-            $DATA_DIR_ARG \
+            --data_dir {EGGNOG_DB_DIR} \
             > {output.log} 2>&1
 
         echo "eggNOG-mapper complete for {wildcards.sample}."

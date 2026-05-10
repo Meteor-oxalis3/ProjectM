@@ -19,8 +19,8 @@ args_ref = config["ref"]
 args_sortmerna_speed = config.get("sortmerna_speed", "default")
 
 # 命令行传参: eggNOG数据库路径 + 分类范围
-# (可选，有数据库则离线运行; --data_dir)
-args_eggnog_data_dir = config.get("eggnog_data_dir", "")
+# (离线模式，需预先下载数据库)
+args_eggnog_data_dir = config.get("eggnog_data_dir", "/ProjectM/db/eggnog/")
 args_eggnog_tax_scope = config.get("eggnog_tax_scope", "prokaryota_broad")
 
 # 命令行传参: LEfSe LDA阈值
@@ -38,6 +38,7 @@ SCRIPT_DIR = f"{ROOT_DIR}/scripts"
 OUTPUT_DIR = f"{ROOT_DIR}/output/{args_uuid}"
 REF_DIR = f"{ROOT_DIR}/db/reference/{args_ref}"
 KRAKEN2_DB_DIR= f"{ROOT_DIR}/db/kraken2"
+EGGNOG_DB_DIR = f"{ROOT_DIR}/db/eggnog"
 
 
 # 全局参数

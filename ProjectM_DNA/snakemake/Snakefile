@@ -24,7 +24,7 @@ args_lefse_level = config.get("lefse_level", "s") + "__"
 # 定义目录
 ROOT_DIR = "/ProjectM/ProjectM_DNA"
 SCRIPT_DIR = f"{ROOT_DIR}/scripts"
-OUTPUT_DIR = f"{ROOT_DIR}/output/{args_uuid}"
+OUTPUT_DIR = config.get("output_dir", f"{ROOT_DIR}/output/{args_uuid}")
 REF_DIR = f"/ProjectM/db/reference/{args_ref}"
 KRAKEN2_DB_DIR = "/ProjectM/db/kraken2"
 

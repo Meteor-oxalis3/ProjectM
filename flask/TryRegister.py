@@ -57,9 +57,10 @@ def register(session, db, bcrypt, User, request, jsonify, text):
         # 查询用户id而不是名字
         user = User.query.filter_by(username=username).first()
 
-        # 创建用户数据目录(/ProjectM/users/{user_id}/data)
-        user_dir = os.path.join('/ProjectM', 'users', str(user.id), 'data')
-        os.makedirs(user_dir, exist_ok=True)
+        # 创建用户目录结构
+        base_dir = os.path.join('/ProjectM', 'users', str(user.id))
+        os.makedirs(os.path.join(base_dir, 'data'), exist_ok=True)
+        os.makedirs(os.path.join(base_dir, 'workflows'), exist_ok=True)
 
         return jsonify({
             "success": True,

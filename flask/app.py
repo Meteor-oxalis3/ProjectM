@@ -44,7 +44,7 @@ def make_session_permanent():
 # 配置数据库连接信息
 # 这里也使用了环境变量来设置数据库连接信息
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-    'SQLALCHEMY_DATABASE_URI', 'mysql+pymysql://drcan:Ww112304@172.17.0.4:3306/drcan'
+    'SQLALCHEMY_DATABASE_URI', 'mysql+pymysql://drcan:Ww112304@172.17.0.1:13306/drcan'
 )
 
 # 创建数据库对象
@@ -123,7 +123,7 @@ def get_user_workflows():
 # 删除用户的工作流
 @app.route('/delete_workflows', methods=['POST'])
 def delete_workflows():
-    result = delete_user_workflows(User, session, request, jsonify)
+    result = delete_user_workflows(User, session, request, jsonify, WorkflowAlias, db)
     return result
 
 # 获取DAG图数据
@@ -163,4 +163,4 @@ def to_upload_raw_files():
     return result
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=3000)
+    app.run(debug=True, host='0.0.0.0', port=5000)

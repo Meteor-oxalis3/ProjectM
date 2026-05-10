@@ -1,4 +1,9 @@
 rule merge_group_fastq:
+    input:
+        lambda wildcards: expand(
+            [f"{OUTPUT_DIR}/05_bwa_phix/{{sample}}_1.fastq.gz",
+             f"{OUTPUT_DIR}/05_bwa_phix/{{sample}}_2.fastq.gz"],
+            sample=group_dict[wildcards.group])
     output:
         merged_fastq1 = f"{OUTPUT_DIR}/14_megahit_merged/{{group}}_merged_1.fastq.gz",
         merged_fastq2 = f"{OUTPUT_DIR}/14_megahit_merged/{{group}}_merged_2.fastq.gz",

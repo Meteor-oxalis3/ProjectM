@@ -1,12 +1,13 @@
 import os
 import shutil
+import uuid
 
-def delete_user_workflows(User, session, request, jsonify):
+def delete_user_workflows(User, session, request, jsonify, WorkflowAlias, db):
     user_id = session.get('user_id')
     if not user_id:
         return jsonify({"success": False, "message": "Please login first."}), 401
 
-    user = User.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=uuid.UUID(user_id)).first()
     if not user:
         return jsonify({"success": False, "message": "User not found."}), 404
 
@@ -25,19 +26,31 @@ def delete_user_workflows(User, session, request, jsonify):
 
     for folder_name in folder_names:
         folder_path = os.path.join(user_dir, folder_name)
+        deleted = False
         if os.path.exists(folder_path) and os.path.isdir(folder_path):
             try:
                 shutil.rmtree(folder_path)
-                deleted_folders.append(folder_name)
+                deleted = True
             except Exception as e:
                 print(f"Failed to delete folder {folder_name}: {e}")
-                failed_folders.append(folder_name)
+
+        # 同步删除数据库中的 WorkflowAlias 记录
+        try:
+            alias = WorkflowAlias.query.filter_by(uuid=folder_name).first()
+            if alias:
+                db.session.delete(alias)
+                db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Failed to delete DB record for {folder_name}: {e}")
+
+        if deleted:
+            deleted_folders.append(folder_name)
         else:
-            print(f"Folder not found or not a directory: {folder_name}")
             failed_folders.append(folder_name)
-    
+
     return jsonify({
-        "success": bool(deleted_folders),  # 只有成功删除文件夹才返回 True
+        "success": bool(deleted_folders),
         "deleted": deleted_folders,
         "failed": failed_folders
     }), 200

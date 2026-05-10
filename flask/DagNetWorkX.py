@@ -25,7 +25,9 @@ def get_dag_current_and_waiting(dot_file, log_file):
     # 已完成事件
     completed_str = get_dag_status(log_file)
     # print("completed_str: ", completed_str)
-    completed = set(map(int, completed_str.split(',')))
+    completed = set()
+    if completed_str.strip():
+        completed = set(map(int, [x for x in completed_str.split(',') if x.strip()]))
 
     # 构建有向图
     G = nx.DiGraph()

@@ -18,14 +18,14 @@ def login(request, jsonify, session, bcrypt, User):
 
             if user and bcrypt.check_password_hash(user.passwd_hash, password):
                 # 设置会话
-                session['user_id'] = user.id
+                session['user_id'] = str(user.id)
 
                 return jsonify({
                     "success": True,
                     "message": "Logged in successfully!",
                     "redirect": "/upload",
                     "user": {
-                        "id": user.id,
+                        "id": str(user.id),
                         "username": user.username
                     }
                 }), 200

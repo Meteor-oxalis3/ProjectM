@@ -1,7 +1,8 @@
 import os
+import uuid
 def current_user(session, User, jsonify):
     if 'user_id' in session:
-        user = User.query.get(session['user_id'])
+        user = User.query.get(uuid.UUID(session['user_id']))
         if user:
             return jsonify({
                 "success": True,

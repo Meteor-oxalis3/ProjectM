@@ -1,11 +1,12 @@
 import os
+import uuid
 
 def delete_user_files(User, session, request, jsonify):
     user_id = session.get('user_id')
     if not user_id:
         return jsonify({"success": False, "message": "Please login first."}), 401
 
-    user = User.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=uuid.UUID(user_id)).first()
     if not user:
         return jsonify({"success": False, "message": "User not found."}), 404
 

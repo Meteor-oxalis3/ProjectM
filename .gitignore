@@ -11,5 +11,7 @@ ProjectM_RNA/.snakemake/
 *.txt
 .claude/
 paper/
-envs/
-frontend/
+frontend/node_modules/
+frontend/dist/
+users/
+.pnpm-store/

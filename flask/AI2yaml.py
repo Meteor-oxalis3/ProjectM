@@ -21,16 +21,12 @@ def ai_to_yaml(user_id, files, chat_content, pipeline_type="metagenomics"):
 请将用户提供的 FASTQ 文件按样本配对，生成以下 CSV 格式（逗号分隔），无需其他内容:
 ID,fastq1,fastq2,group
 
-规则:
-- ID: 样本唯一标识符 (如 sample1_UC)
-- fastq1/fastq2: 双端 FASTQ 文件的完整路径
+重要规则:
+- 只能使用下面"文件列表"中实际存在的 FASTQ 文件，严禁编造或使用 /ProjectM/raw_data/ 等测试路径
+- ID: 样本唯一标识符，从文件名中提取有意义的样本名 (如 SRR5947819 → sample1)
+- fastq1/fastq2: 必须使用文件列表中给出的完整路径
 - group: 样本分组 (如 UC、nonIBD、case、control)，需根据用户描述或文件名推断
-- 路径格式: /ProjectM/users/(用户UUID)/data/文件名.fastq.gz
-
-示例输出:
-ID,fastq1,fastq2,group
-sample1_UC,/ProjectM/users/abc-123/data/SRR001_1.fastq.gz,/ProjectM/users/abc-123/data/SRR001_2.fastq.gz,UC
-sample2_Control,/ProjectM/users/abc-123/data/SRR002_1.fastq.gz,/ProjectM/users/abc-123/data/SRR002_2.fastq.gz,Control
+- 严禁出现 /ProjectM/raw_data/ 路径
             '''
         },
         {

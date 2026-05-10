@@ -14,7 +14,7 @@ def dag2vueflow(dag_file: str, workflow_uuid: str, user_id: str):
         dict: 解析后的 JSON DAG 数据
     """
     # 定义 dot 可执行路径
-    dot_bin = "dot"
+    dot_bin = "/micromamba/envs/flask_backend/bin/dot"
 
     # 目标 JSON 文件路径
     output_dir = f"/ProjectM/users/{user_id}/workflows/{workflow_uuid}"

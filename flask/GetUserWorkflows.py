@@ -1,14 +1,13 @@
 import os
 import time
+import uuid
 
 def user_workflows(session, User, jsonify, WorkflowAlias, db):
-    # 获取当前用户的 user_id
     user_id = session.get('user_id')
     if not user_id:
         return jsonify({"success": False, "message": "Please login first."}), 401
 
-    # 查询用户是否存在
-    user = User.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=uuid.UUID(user_id)).first()
     if not user:
         return jsonify({"success": False, "message": "User not found."}), 404
 

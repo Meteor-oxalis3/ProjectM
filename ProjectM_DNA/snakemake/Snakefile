@@ -9,14 +9,9 @@ args_metadata = Path(config["metadata"])
 # 命令行传参: UUID作为一次任务的唯一标识符
 args_uuid = config["uuid"]
 
-# 命令行传参: 物种 
+# 命令行传参: 物种
 # (可选：hg38)
 args_ref = config["ref"]
-
-# # 命令行传参: rRNA去除速度
-# # (可选：fast, default, sensitive)
-# # 默认是default
-# args_sortmerna_speed = config.get("sortmerna_speed", "default")
 
 # 命令行传参: LEfSe LDA阈值
 # (可选，默认是2.5)
@@ -27,19 +22,17 @@ args_lefse_LDA = config.get("lefse_LDA", 2.5)
 args_lefse_level = config.get("lefse_level", "s") + "__"
 
 # 定义目录
-# DATA_DIR = "/ProjectM/raw_data"
-ROOT_DIR = "/ProjectM"
+ROOT_DIR = "/ProjectM/ProjectM_DNA"
 SCRIPT_DIR = f"{ROOT_DIR}/scripts"
 OUTPUT_DIR = f"{ROOT_DIR}/output/{args_uuid}"
-REF_DIR = f"{ROOT_DIR}/db/reference/{args_ref}"
-KRAKEN2_DB_DIR= f"{ROOT_DIR}/db/kraken2"
+REF_DIR = f"/ProjectM/db/reference/{args_ref}"
+KRAKEN2_DB_DIR = "/ProjectM/db/kraken2"
 
 
 # 全局参数
 thread_fastqc = 1
 thread_fastp = 10
 thread_bwa = 30
-# thread_sortmerna = 20
 thread_kraken2 = 30
 thread_megahit = 30
 thread_prodigal = 10
@@ -89,16 +82,13 @@ lefse_pattern = "(" + "|".join(list_group) + ")"
 
 # 定义样本组字典
 group_dict = {group: samples[samples["group"] == group]["ID"].tolist() for group in list_group}
-# print("Sample groups and their samples:", group_dict)
-# print("Sample groups and their samples:", group_dict)
 
 # 定义数据库文件路径
-# 注意: 这里的数据库文件路径需要在 docker 镜像初始化时挂载
-# SORTMERNA_DB_FILE = f"{ROOT_DIR}/db/sortmerna/smr_v4.3_{args_sortmerna_speed}_db.fasta"
-METAQUAST_DB_SILVA_DIR = f"{ROOT_DIR}/db/metaquast/silva"
+# 注意: 数据库路径指向 /ProjectM/db/ 共用目录
+METAQUAST_DB_SILVA_DIR = "/ProjectM/db/metaquast/silva"
 
 # 测试命令
-# /micromamba/envs/ProjectM/bin/snakemake -s /root/ProjectM/snakemake/Snakefile --config ref=hg38 uuid="test" metadata="/root/ProjectM/saliva_samples.csv" --cores 100 --quiet
+# /micromamba/envs/ProjectM/bin/snakemake -s /ProjectM/ProjectM_DNA/snakemake/Snakefile --config ref=hg38 uuid="test" metadata="/ProjectM/IBD_samples.csv" --cores 100 --quiet
 
 rule all:
     # 定义最终需要生成的所有文件
@@ -112,7 +102,6 @@ rule all:
         expand(f"{OUTPUT_DIR}/03_fastqc_clean/clean_{{sample}}_2_fastqc.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/04_bwa_host/bwa_host_{{sample}}.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/05_bwa_phix/bwa_phix_{{sample}}.log", sample=list_ID),
-        # expand(f"{OUTPUT_DIR}/06_sortmerna/sortmerna_{{sample}}.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/06_kraken2/kraken2_{{sample}}.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/07_kreport2mpa/kreport2mpa_{{sample}}.log", sample=list_ID),
         f"{OUTPUT_DIR}/08_mpa2matrix/mpa_group_added_matrix.tsv",
@@ -130,10 +119,6 @@ rule all:
         f"{OUTPUT_DIR}/19_heatmap/heatmap.pdf",
         f"{OUTPUT_DIR}/20_differential_boxplot/differential_boxplot.pdf",
         f"{OUTPUT_DIR}/26_rarefaction_curve/rarefaction_curve.pdf",
-        # MAG binning
-        # expand(f"{OUTPUT_DIR}/21_mag_bins/{{group}}/depth.txt",   group=list_group),
-        # expand(f"{OUTPUT_DIR}/22_busco/{{group}}/busco_summary.tsv", group=list_group),
-        # Functional annotation
         expand(f"{OUTPUT_DIR}/24_prokka/{{group}}/{{group}}.gff", group=list_group),
         f"{OUTPUT_DIR}/25_prokka_plot/prokka_feature_counts.pdf",
 
@@ -144,7 +129,6 @@ include: "rules/02_fastp.smk"
 include: "rules/03_fastqc_clean.smk"
 include: "rules/04_bwa_host.smk"
 include: "rules/05_bwa_phix.smk"
-# include: "rules/06_sortmerna.smk"
 include: "rules/06_kraken2.smk"
 include: "rules/07_kreport2mpa.smk"
 include: "rules/08_mpa2matrix.smk"
@@ -161,7 +145,5 @@ include: "rules/18_stacked_bar.smk"
 include: "rules/19_heatmap.smk"
 include: "rules/20_differential_boxplot.smk"
 include: "rules/26_rarefaction_curve.smk"
-# include: "rules/21_mag_bin.smk"
-# include: "rules/22_busco_bins.smk"
 include: "rules/24_prokka_group.smk"
 include: "rules/25_prokka_plot.smk"

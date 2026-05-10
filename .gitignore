@@ -9,3 +9,7 @@ ProjectM_RNA/db
 ProjectM_RNA/snakemake/output/
 ProjectM_RNA/.snakemake/
 *.txt
+.claude/
+paper/
+envs/
+frontend/

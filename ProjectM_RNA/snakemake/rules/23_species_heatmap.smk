@@ -3,8 +3,8 @@ rule species_heatmap:
         matrix   = f"{OUTPUT_DIR}/09_mpa2matrix/mpa_relative_abundance_matrix.tsv",
         metadata = args_metadata
     output:
-        pdf = f"{OUTPUT_DIR}/23_species_heatmap/species_heatmap.pdf",
-        log = f"{OUTPUT_DIR}/23_species_heatmap/species_heatmap.log"
+        pdf = f"{OUTPUT_DIR}/23_species_heatmap/heatmap.pdf",
+        log = f"{OUTPUT_DIR}/23_species_heatmap/heatmap.log"
     shell:
         """
         mkdir -p {OUTPUT_DIR}/23_species_heatmap;

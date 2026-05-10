@@ -20,11 +20,6 @@ args = parser.parse_args()
 
 os.makedirs(args.outdir, exist_ok=True)
 
-# Read matrix with group row
-with open(args.input) as f:
-    header = f.readline().strip().split('\t')
-group_line = f.readline().strip().split('\t')
-
 df = pd.read_csv(args.input, sep='\t', index_col=0, skiprows=1)
 meta = pd.read_csv(args.metadata)
 group_dict = dict(zip(meta['ID'], meta['group']))

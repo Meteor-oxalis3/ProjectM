@@ -131,12 +131,12 @@ rule all:
         expand(f"{OUTPUT_DIR}/14_cdhit/cdhit_{{sample}}_fna.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/15_eggnog_mapper/{{sample}}.emapper.annotations", sample=list_ID),
         f"{OUTPUT_DIR}/17_ko_matrix/ko_group_added_matrix.tsv",
-        f"{OUTPUT_DIR}/18_ko_heatmap/ko_heatmap.pdf",
-        f"{OUTPUT_DIR}/19_ko_volcano/ko_volcano.pdf",
+        f"{OUTPUT_DIR}/18_ko_deseq2/ko_volcano.pdf",
+        f"{OUTPUT_DIR}/18_ko_deseq2/ko_heatmap.pdf",
         f"{OUTPUT_DIR}/20_alpha_diversity/alpha_diversity.pdf",
         f"{OUTPUT_DIR}/21_beta_diversity/beta_diversity_pcoa.pdf",
         f"{OUTPUT_DIR}/22_stacked_bar/stacked_bar.pdf",
-        f"{OUTPUT_DIR}/23_species_heatmap/species_heatmap.pdf",
+        f"{OUTPUT_DIR}/23_species_heatmap/heatmap.pdf",
         f"{OUTPUT_DIR}/24_differential_boxplot/differential_boxplot.pdf",
         f"{OUTPUT_DIR}/25_rarefaction_curve/rarefaction_curve.pdf",
 
@@ -157,8 +157,7 @@ include: "rules/13_metaquast.smk"
 include: "rules/14_cdhit.smk"
 include: "rules/15_eggnog_mapper.smk"
 include: "rules/17_ko_matrix.smk"
-include: "rules/18_ko_heatmap.smk"
-include: "rules/19_ko_volcano.smk"
+include: "rules/18_ko_deseq2.smk"
 include: "rules/20_alpha_diversity.smk"
 include: "rules/21_beta_diversity.smk"
 include: "rules/22_stacked_bar.smk"

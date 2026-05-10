@@ -1,0 +1,564 @@
+host: f87430933ed2
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 200
+Rules claiming more threads will be scaled down.
+Job stats:
+job                           count
+--------------------------  -------
+alignmentSieve                    4
+all                               1
+bedtools_merge                    1
+bwa                               4
+fastp                             4
+fastqc_raw                        4
+fastqc_trimmed                    4
+idr_case                          1
+idr_control                       1
+link                              4
+macs3                             4
+multiqc                           1
+samtools                          4
+samtools_merge_case               1
+samtools_merge_control            1
+tobias_ATACorrect_case            1
+tobias_ATACorrect_control         1
+tobias_BINDetect                  1
+tobias_ScoreBigwig_case           1
+tobias_ScoreBigwig_control        1
+total                            44
+
+Select jobs to execute...
+Execute 4 jobs...
+
+[Sat Mar  1 16:53:28 2025]
+localrule link:
+    input: /DrCan/demo/data/SRR13849301_1.fastq.gz, /DrCan/demo/data/SRR13849301_2.fastq.gz
+    output: raw_data/control2_1.fastq.gz, raw_data/control2_2.fastq.gz
+    jobid: 9
+    reason: Missing output files: raw_data/control2_2.fastq.gz, raw_data/control2_1.fastq.gz
+    wildcards: sample=control2
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 16:53:28 2025]
+localrule link:
+    input: /DrCan/demo/data/SRR13849307_1.fastq.gz, /DrCan/demo/data/SRR13849307_2.fastq.gz
+    output: raw_data/case1_1.fastq.gz, raw_data/case1_2.fastq.gz
+    jobid: 3
+    reason: Forced execution
+    wildcards: sample=case1
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 16:53:28 2025]
+localrule link:
+    input: /DrCan/demo/data/SRR13849313_1.fastq.gz, /DrCan/demo/data/SRR13849313_2.fastq.gz
+    output: raw_data/case2_1.fastq.gz, raw_data/case2_2.fastq.gz
+    jobid: 5
+    reason: Forced execution
+    wildcards: sample=case2
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 16:53:28 2025]
+localrule link:
+    input: /DrCan/demo/data/SRR13849295_1.fastq.gz, /DrCan/demo/data/SRR13849295_2.fastq.gz
+    output: raw_data/control1_1.fastq.gz, raw_data/control1_2.fastq.gz
+    jobid: 7
+    reason: Missing output files: raw_data/control1_2.fastq.gz, raw_data/control1_1.fastq.gz
+    wildcards: sample=control1
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 16:53:28 2025]
+Finished job 9.
+1 of 44 steps (2%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Sat Mar  1 16:53:28 2025]
+localrule fastqc_raw:
+    input: raw_data/control2_1.fastq.gz, raw_data/control2_2.fastq.gz
+    output: raw_fastqc/control2_1_fastqc.html, raw_fastqc/control2_2_fastqc.html, raw_fastqc/control2_1_fastqc.zip, raw_fastqc/control2_2_fastqc.zip
+    jobid: 8
+    reason: Missing output files: raw_fastqc/control2_2_fastqc.html, raw_fastqc/control2_1_fastqc.html; Input files updated by another job: raw_data/control2_2.fastq.gz, raw_data/control2_1.fastq.gz
+    wildcards: sample=control2
+    threads: 4
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 16:53:28 2025]
+localrule fastp:
+    input: raw_data/control2_1.fastq.gz, raw_data/control2_2.fastq.gz
+    output: fastp/fastp_control2_1.fastq.gz, fastp/fastp_control2_2.fastq.gz, fastp/fastp_control2.json, fastp/fastp_control2.html
+    jobid: 17
+    reason: Missing output files: fastp/fastp_control2_1.fastq.gz, fastp/fastp_control2_2.fastq.gz; Input files updated by another job: raw_data/control2_2.fastq.gz, raw_data/control2_1.fastq.gz
+    wildcards: sample=control2
+    threads: 16
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 16:53:28 2025]
+Finished job 3.
+2 of 44 steps (5%) done
+[Sat Mar  1 16:53:28 2025]
+Finished job 5.
+3 of 44 steps (7%) done
+[Sat Mar  1 16:53:28 2025]
+Finished job 7.
+4 of 44 steps (9%) done
+Select jobs to execute...
+Execute 6 jobs...
+
+[Sat Mar  1 16:53:28 2025]
+localrule fastqc_raw:
+    input: raw_data/control1_1.fastq.gz, raw_data/control1_2.fastq.gz
+    output: raw_fastqc/control1_1_fastqc.html, raw_fastqc/control1_2_fastqc.html, raw_fastqc/control1_1_fastqc.zip, raw_fastqc/control1_2_fastqc.zip
+    jobid: 6
+    reason: Missing output files: raw_fastqc/control1_2_fastqc.html, raw_fastqc/control1_1_fastqc.html; Input files updated by another job: raw_data/control1_2.fastq.gz, raw_data/control1_1.fastq.gz
+    wildcards: sample=control1
+    threads: 4
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 16:53:28 2025]
+localrule fastqc_raw:
+    input: raw_data/case2_1.fastq.gz, raw_data/case2_2.fastq.gz
+    output: raw_fastqc/case2_1_fastqc.html, raw_fastqc/case2_2_fastqc.html, raw_fastqc/case2_1_fastqc.zip, raw_fastqc/case2_2_fastqc.zip
+    jobid: 4
+    reason: Missing output files: raw_fastqc/case2_2_fastqc.html, raw_fastqc/case2_1_fastqc.html; Input files updated by another job: raw_data/case2_1.fastq.gz, raw_data/case2_2.fastq.gz
+    wildcards: sample=case2
+    threads: 4
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 16:53:28 2025]
+localrule fastp:
+    input: raw_data/control1_1.fastq.gz, raw_data/control1_2.fastq.gz
+    output: fastp/fastp_control1_1.fastq.gz, fastp/fastp_control1_2.fastq.gz, fastp/fastp_control1.json, fastp/fastp_control1.html
+    jobid: 15
+    reason: Missing output files: fastp/fastp_control1_1.fastq.gz, fastp/fastp_control1_2.fastq.gz; Input files updated by another job: raw_data/control1_2.fastq.gz, raw_data/control1_1.fastq.gz
+    wildcards: sample=control1
+    threads: 16
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 16:53:28 2025]
+localrule fastqc_raw:
+    input: raw_data/case1_1.fastq.gz, raw_data/case1_2.fastq.gz
+    output: raw_fastqc/case1_1_fastqc.html, raw_fastqc/case1_2_fastqc.html, raw_fastqc/case1_1_fastqc.zip, raw_fastqc/case1_2_fastqc.zip
+    jobid: 2
+    reason: Missing output files: raw_fastqc/case1_2_fastqc.html, raw_fastqc/case1_1_fastqc.html; Input files updated by another job: raw_data/case1_1.fastq.gz, raw_data/case1_2.fastq.gz
+    wildcards: sample=case1
+    threads: 4
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 16:53:28 2025]
+localrule fastp:
+    input: raw_data/case2_1.fastq.gz, raw_data/case2_2.fastq.gz
+    output: fastp/fastp_case2_1.fastq.gz, fastp/fastp_case2_2.fastq.gz, fastp/fastp_case2.json, fastp/fastp_case2.html
+    jobid: 13
+    reason: Missing output files: fastp/fastp_case2_1.fastq.gz, fastp/fastp_case2_2.fastq.gz; Input files updated by another job: raw_data/case2_1.fastq.gz, raw_data/case2_2.fastq.gz
+    wildcards: sample=case2
+    threads: 16
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 16:53:28 2025]
+localrule fastp:
+    input: raw_data/case1_1.fastq.gz, raw_data/case1_2.fastq.gz
+    output: fastp/fastp_case1_1.fastq.gz, fastp/fastp_case1_2.fastq.gz, fastp/fastp_case1.json, fastp/fastp_case1.html
+    jobid: 11
+    reason: Missing output files: fastp/fastp_case1_1.fastq.gz, fastp/fastp_case1_2.fastq.gz; Input files updated by another job: raw_data/case1_1.fastq.gz, raw_data/case1_2.fastq.gz
+    wildcards: sample=case1
+    threads: 16
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 16:54:54 2025]
+Finished job 11.
+5 of 44 steps (11%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Sat Mar  1 16:54:54 2025]
+localrule bwa:
+    input: fastp/fastp_case1_1.fastq.gz, fastp/fastp_case1_2.fastq.gz
+    output: bwa/case1.sam
+    jobid: 19
+    reason: Missing output files: bwa/case1.sam; Input files updated by another job: fastp/fastp_case1_2.fastq.gz, fastp/fastp_case1_1.fastq.gz
+    wildcards: sample=case1
+    threads: 50
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 16:54:54 2025]
+localrule fastqc_trimmed:
+    input: fastp/fastp_case1_1.fastq.gz, fastp/fastp_case1_2.fastq.gz
+    output: trimmed_fastqc/fastp_case1_1_fastqc.html, trimmed_fastqc/fastp_case1_2_fastqc.html, trimmed_fastqc/fastp_case1_1_fastqc.zip, trimmed_fastqc/fastp_case1_2_fastqc.zip
+    jobid: 10
+    reason: Missing output files: trimmed_fastqc/fastp_case1_2_fastqc.html, trimmed_fastqc/fastp_case1_1_fastqc.html; Input files updated by another job: fastp/fastp_case1_2.fastq.gz, fastp/fastp_case1_1.fastq.gz
+    wildcards: sample=case1
+    threads: 4
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 16:54:57 2025]
+Finished job 17.
+6 of 44 steps (14%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Sat Mar  1 16:54:57 2025]
+localrule fastqc_trimmed:
+    input: fastp/fastp_control2_1.fastq.gz, fastp/fastp_control2_2.fastq.gz
+    output: trimmed_fastqc/fastp_control2_1_fastqc.html, trimmed_fastqc/fastp_control2_2_fastqc.html, trimmed_fastqc/fastp_control2_1_fastqc.zip, trimmed_fastqc/fastp_control2_2_fastqc.zip
+    jobid: 16
+    reason: Missing output files: trimmed_fastqc/fastp_control2_2_fastqc.html, trimmed_fastqc/fastp_control2_1_fastqc.html; Input files updated by another job: fastp/fastp_control2_1.fastq.gz, fastp/fastp_control2_2.fastq.gz
+    wildcards: sample=control2
+    threads: 4
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 16:54:57 2025]
+localrule bwa:
+    input: fastp/fastp_control2_1.fastq.gz, fastp/fastp_control2_2.fastq.gz
+    output: bwa/control2.sam
+    jobid: 25
+    reason: Missing output files: bwa/control2.sam; Input files updated by another job: fastp/fastp_control2_1.fastq.gz, fastp/fastp_control2_2.fastq.gz
+    wildcards: sample=control2
+    threads: 50
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 16:55:02 2025]
+Finished job 13.
+7 of 44 steps (16%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Sat Mar  1 16:55:02 2025]
+localrule bwa:
+    input: fastp/fastp_case2_1.fastq.gz, fastp/fastp_case2_2.fastq.gz
+    output: bwa/case2.sam
+    jobid: 21
+    reason: Missing output files: bwa/case2.sam; Input files updated by another job: fastp/fastp_case2_2.fastq.gz, fastp/fastp_case2_1.fastq.gz
+    wildcards: sample=case2
+    threads: 50
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 16:55:02 2025]
+localrule fastqc_trimmed:
+    input: fastp/fastp_case2_1.fastq.gz, fastp/fastp_case2_2.fastq.gz
+    output: trimmed_fastqc/fastp_case2_1_fastqc.html, trimmed_fastqc/fastp_case2_2_fastqc.html, trimmed_fastqc/fastp_case2_1_fastqc.zip, trimmed_fastqc/fastp_case2_2_fastqc.zip
+    jobid: 12
+    reason: Missing output files: trimmed_fastqc/fastp_case2_1_fastqc.html, trimmed_fastqc/fastp_case2_2_fastqc.html; Input files updated by another job: fastp/fastp_case2_2.fastq.gz, fastp/fastp_case2_1.fastq.gz
+    wildcards: sample=case2
+    threads: 4
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 16:55:53 2025]
+Finished job 15.
+8 of 44 steps (18%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar  1 16:55:53 2025]
+localrule fastqc_trimmed:
+    input: fastp/fastp_control1_1.fastq.gz, fastp/fastp_control1_2.fastq.gz
+    output: trimmed_fastqc/fastp_control1_1_fastqc.html, trimmed_fastqc/fastp_control1_2_fastqc.html, trimmed_fastqc/fastp_control1_1_fastqc.zip, trimmed_fastqc/fastp_control1_2_fastqc.zip
+    jobid: 14
+    reason: Missing output files: trimmed_fastqc/fastp_control1_1_fastqc.html, trimmed_fastqc/fastp_control1_2_fastqc.html; Input files updated by another job: fastp/fastp_control1_1.fastq.gz, fastp/fastp_control1_2.fastq.gz
+    wildcards: sample=control1
+    threads: 4
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 16:55:54 2025]
+Finished job 8.
+9 of 44 steps (20%) done
+Select jobs to execute...
+Waiting for more resources.
+[Sat Mar  1 16:55:58 2025]
+Finished job 2.
+10 of 44 steps (23%) done
+Waiting for more resources.
+[Sat Mar  1 16:56:33 2025]
+Finished job 4.
+11 of 44 steps (25%) done
+Waiting for more resources.
+[Sat Mar  1 16:57:41 2025]
+Finished job 6.
+12 of 44 steps (27%) done
+Waiting for more resources.
+[Sat Mar  1 16:58:06 2025]
+Finished job 10.
+13 of 44 steps (30%) done
+Waiting for more resources.
+[Sat Mar  1 16:58:17 2025]
+Finished job 16.
+14 of 44 steps (32%) done
+Waiting for more resources.
+[Sat Mar  1 16:59:08 2025]
+Finished job 12.
+15 of 44 steps (34%) done
+Waiting for more resources.
+[Sat Mar  1 17:00:43 2025]
+Finished job 14.
+16 of 44 steps (36%) done
+Execute 1 jobs...
+
+[Sat Mar  1 17:00:43 2025]
+localrule bwa:
+    input: fastp/fastp_control1_1.fastq.gz, fastp/fastp_control1_2.fastq.gz
+    output: bwa/control1.sam
+    jobid: 23
+    reason: Missing output files: bwa/control1.sam; Input files updated by another job: fastp/fastp_control1_1.fastq.gz, fastp/fastp_control1_2.fastq.gz
+    wildcards: sample=control1
+    threads: 50
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:01:07 2025]
+Finished job 25.
+17 of 44 steps (39%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar  1 17:01:07 2025]
+localrule samtools:
+    input: bwa/control2.sam
+    output: samtools/control2.bam, samtools/fixmate_control2.bam, samtools/sorted_fixmate_control2.bam, samtools/dedup_control2.bam, samtools/dedup_control2.bam.bai, bwa/control2_stats.txt
+    jobid: 24
+    reason: Missing output files: bwa/control2_stats.txt; Input files updated by another job: bwa/control2.sam
+    wildcards: sample=control2
+    threads: 30
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:01:30 2025]
+Finished job 21.
+18 of 44 steps (41%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar  1 17:01:30 2025]
+localrule samtools:
+    input: bwa/case2.sam
+    output: samtools/case2.bam, samtools/fixmate_case2.bam, samtools/sorted_fixmate_case2.bam, samtools/dedup_case2.bam, samtools/dedup_case2.bam.bai, bwa/case2_stats.txt
+    jobid: 20
+    reason: Missing output files: bwa/case2_stats.txt, samtools/dedup_case2.bam; Input files updated by another job: bwa/case2.sam
+    wildcards: sample=case2
+    threads: 30
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:01:51 2025]
+Finished job 19.
+19 of 44 steps (43%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar  1 17:01:51 2025]
+localrule samtools:
+    input: bwa/case1.sam
+    output: samtools/case1.bam, samtools/fixmate_case1.bam, samtools/sorted_fixmate_case1.bam, samtools/dedup_case1.bam, samtools/dedup_case1.bam.bai, bwa/case1_stats.txt
+    jobid: 18
+    reason: Missing output files: bwa/case1_stats.txt; Input files updated by another job: bwa/case1.sam
+    wildcards: sample=case1
+    threads: 30
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:05:42 2025]
+Finished job 24.
+20 of 44 steps (45%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar  1 17:05:42 2025]
+localrule alignmentSieve:
+    input: samtools/dedup_control2.bam
+    output: alignmentSieve/ATACshifted_control2.bam, alignmentSieve/control2_metrics.txt, alignmentSieve/ATACshifted_control2_sorted.bam
+    jobid: 33
+    reason: Missing output files: alignmentSieve/ATACshifted_control2_sorted.bam; Input files updated by another job: samtools/dedup_control2.bam
+    wildcards: sample=control2
+    threads: 30
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:06:17 2025]
+Finished job 18.
+21 of 44 steps (48%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar  1 17:06:17 2025]
+localrule alignmentSieve:
+    input: samtools/dedup_case1.bam
+    output: alignmentSieve/ATACshifted_case1.bam, alignmentSieve/case1_metrics.txt, alignmentSieve/ATACshifted_case1_sorted.bam
+    jobid: 27
+    reason: Missing output files: alignmentSieve/ATACshifted_case1_sorted.bam; Input files updated by another job: samtools/dedup_case1.bam
+    wildcards: sample=case1
+    threads: 30
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:06:24 2025]
+Finished job 33.
+22 of 44 steps (50%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar  1 17:06:24 2025]
+localrule macs3:
+    input: alignmentSieve/ATACshifted_control2_sorted.bam
+    output: macs3/control2_peaks.narrowPeak, macs3/control2_peaks.xls, macs3/control2_summits.bed, macs3/control2_treat_pileup.bdg, macs3/control2_treat_pileup.bw
+    jobid: 32
+    reason: Missing output files: macs3/control2_treat_pileup.bw, macs3/control2_summits.bed; Input files updated by another job: alignmentSieve/ATACshifted_control2_sorted.bam
+    wildcards: sample=control2
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:06:42 2025]
+Finished job 20.
+23 of 44 steps (52%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Sat Mar  1 17:06:42 2025]
+localrule alignmentSieve:
+    input: samtools/dedup_case2.bam
+    output: alignmentSieve/ATACshifted_case2.bam, alignmentSieve/case2_metrics.txt, alignmentSieve/ATACshifted_case2_sorted.bam
+    jobid: 29
+    reason: Missing output files: alignmentSieve/ATACshifted_case2_sorted.bam; Input files updated by another job: samtools/dedup_case2.bam
+    wildcards: sample=case2
+    threads: 30
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 17:06:42 2025]
+localrule samtools_merge_case:
+    input: samtools/dedup_case1.bam, samtools/dedup_case2.bam
+    output: case_prefix/bam_merge/merged_case_prefix.bam, case_prefix/bam_merge/merged_case_prefix.bam.bai
+    jobid: 37
+    reason: Missing output files: case_prefix/bam_merge/merged_case_prefix.bam; Input files updated by another job: samtools/dedup_case1.bam, samtools/dedup_case2.bam
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:06:57 2025]
+Finished job 27.
+24 of 44 steps (55%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar  1 17:06:57 2025]
+localrule macs3:
+    input: alignmentSieve/ATACshifted_case1_sorted.bam
+    output: macs3/case1_peaks.narrowPeak, macs3/case1_peaks.xls, macs3/case1_summits.bed, macs3/case1_treat_pileup.bdg, macs3/case1_treat_pileup.bw
+    jobid: 26
+    reason: Missing output files: macs3/case1_summits.bed, macs3/case1_treat_pileup.bw; Input files updated by another job: alignmentSieve/ATACshifted_case1_sorted.bam
+    wildcards: sample=case1
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:07:29 2025]
+Finished job 29.
+25 of 44 steps (57%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar  1 17:07:29 2025]
+localrule macs3:
+    input: alignmentSieve/ATACshifted_case2_sorted.bam
+    output: macs3/case2_peaks.narrowPeak, macs3/case2_peaks.xls, macs3/case2_summits.bed, macs3/case2_treat_pileup.bdg, macs3/case2_treat_pileup.bw
+    jobid: 28
+    reason: Missing output files: macs3/case2_summits.bed, macs3/case2_treat_pileup.bw; Input files updated by another job: alignmentSieve/ATACshifted_case2_sorted.bam
+    wildcards: sample=case2
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:07:45 2025]
+Finished job 37.
+26 of 44 steps (59%) done
+[Sat Mar  1 17:08:32 2025]
+Finished job 23.
+27 of 44 steps (61%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar  1 17:08:32 2025]
+localrule samtools:
+    input: bwa/control1.sam
+    output: samtools/control1.bam, samtools/fixmate_control1.bam, samtools/sorted_fixmate_control1.bam, samtools/dedup_control1.bam, samtools/dedup_control1.bam.bai, bwa/control1_stats.txt
+    jobid: 22
+    reason: Missing output files: bwa/control1_stats.txt; Input files updated by another job: bwa/control1.sam
+    wildcards: sample=control1
+    threads: 30
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:11:04 2025]
+Finished job 26.
+28 of 44 steps (64%) done
+[Sat Mar  1 17:11:19 2025]
+Finished job 32.
+29 of 44 steps (66%) done
+[Sat Mar  1 17:11:40 2025]
+Finished job 28.
+30 of 44 steps (68%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar  1 17:11:40 2025]
+localrule idr_case:
+    input: macs3/case1_peaks.narrowPeak, macs3/case2_peaks.narrowPeak
+    output: case_prefix/idr/case_prefix_idr.txt, case_prefix/idr/case_prefix_idr.log, case_prefix/idr/case_prefix_idr.txt.png, case_prefix/idr/case_prefix_idr.narrowPeak
+    jobid: 40
+    reason: Missing output files: case_prefix/idr/case_prefix_idr.narrowPeak; Input files updated by another job: macs3/case2_peaks.narrowPeak, macs3/case1_peaks.narrowPeak
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:12:16 2025]
+Finished job 40.
+31 of 44 steps (70%) done
+[Sat Mar  1 17:16:15 2025]
+Finished job 22.
+32 of 44 steps (73%) done
+Select jobs to execute...
+Execute 3 jobs...
+
+[Sat Mar  1 17:16:15 2025]
+localrule alignmentSieve:
+    input: samtools/dedup_control1.bam
+    output: alignmentSieve/ATACshifted_control1.bam, alignmentSieve/control1_metrics.txt, alignmentSieve/ATACshifted_control1_sorted.bam
+    jobid: 31
+    reason: Missing output files: alignmentSieve/ATACshifted_control1_sorted.bam; Input files updated by another job: samtools/dedup_control1.bam
+    wildcards: sample=control1
+    threads: 30
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 17:16:15 2025]
+localrule samtools_merge_control:
+    input: samtools/dedup_control1.bam, samtools/dedup_control1.bam
+    output: control_prefix/bam_merge/merged_control_prefix.bam, control_prefix/bam_merge/merged_control_prefix.bam.bai
+    jobid: 43
+    reason: Missing output files: control_prefix/bam_merge/merged_control_prefix.bam; Input files updated by another job: samtools/dedup_control1.bam
+    resources: tmpdir=/tmp
+
+
+[Sat Mar  1 17:16:15 2025]
+localrule multiqc:
+    input: raw_fastqc/case1_1_fastqc.html, raw_fastqc/case2_1_fastqc.html, raw_fastqc/control1_1_fastqc.html, raw_fastqc/control2_1_fastqc.html, raw_fastqc/case1_2_fastqc.html, raw_fastqc/case2_2_fastqc.html, raw_fastqc/control1_2_fastqc.html, raw_fastqc/control2_2_fastqc.html, trimmed_fastqc/fastp_case1_1_fastqc.html, trimmed_fastqc/fastp_case2_1_fastqc.html, trimmed_fastqc/fastp_control1_1_fastqc.html, trimmed_fastqc/fastp_control2_1_fastqc.html, trimmed_fastqc/fastp_case1_2_fastqc.html, trimmed_fastqc/fastp_case2_2_fastqc.html, trimmed_fastqc/fastp_control1_2_fastqc.html, trimmed_fastqc/fastp_control2_2_fastqc.html, bwa/case1_stats.txt, bwa/case2_stats.txt, bwa/control1_stats.txt, bwa/control2_stats.txt
+    output: multiqc/multiqc_report.html
+    jobid: 1
+    reason: Input files updated by another job: trimmed_fastqc/fastp_case1_2_fastqc.html, trimmed_fastqc/fastp_case2_1_fastqc.html, raw_fastqc/case2_1_fastqc.html, trimmed_fastqc/fastp_control1_1_fastqc.html, trimmed_fastqc/fastp_control2_2_fastqc.html, bwa/control1_stats.txt, trimmed_fastqc/fastp_case1_1_fastqc.html, raw_fastqc/control2_2_fastqc.html, bwa/case2_stats.txt, raw_fastqc/case1_2_fastqc.html, trimmed_fastqc/fastp_case2_2_fastqc.html, trimmed_fastqc/fastp_control2_1_fastqc.html, bwa/control2_stats.txt, raw_fastqc/control1_2_fastqc.html, bwa/case1_stats.txt, raw_fastqc/case1_1_fastqc.html, trimmed_fastqc/fastp_control1_2_fastqc.html, raw_fastqc/case2_2_fastqc.html, raw_fastqc/control2_1_fastqc.html, raw_fastqc/control1_1_fastqc.html
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:16:20 2025]
+Finished job 1.
+33 of 44 steps (75%) done
+[Sat Mar  1 17:17:06 2025]
+Finished job 31.
+34 of 44 steps (77%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar  1 17:17:06 2025]
+localrule macs3:
+    input: alignmentSieve/ATACshifted_control1_sorted.bam
+    output: macs3/control1_peaks.narrowPeak, macs3/control1_peaks.xls, macs3/control1_summits.bed, macs3/control1_treat_pileup.bdg, macs3/control1_treat_pileup.bw
+    jobid: 30
+    reason: Missing output files: macs3/control1_treat_pileup.bw, macs3/control1_summits.bed; Input files updated by another job: alignmentSieve/ATACshifted_control1_sorted.bam
+    wildcards: sample=control1
+    resources: tmpdir=/tmp
+
+[Sat Mar  1 17:17:55 2025]
+Finished job 43.
+35 of 44 steps (80%) done

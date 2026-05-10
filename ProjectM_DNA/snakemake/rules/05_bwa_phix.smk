@@ -2,7 +2,7 @@ rule bwa_phix:
     input:
         host_removed_fastq1 = f"{OUTPUT_DIR}/04_bwa_host/{{sample}}_1.fastq.gz",
         host_removed_fastq2 = f"{OUTPUT_DIR}/04_bwa_host/{{sample}}_2.fastq.gz",
-        phix_ref = f"{ROOT_DIR}/db/reference/phiX/phiX.fasta"
+        phix_ref = "/ProjectM/db/reference/phiX/phiX.fasta"
     output:
         phix_removed_fastq1 = f"{OUTPUT_DIR}/05_bwa_phix/{{sample}}_1.fastq.gz",
         phix_removed_fastq2 = f"{OUTPUT_DIR}/05_bwa_phix/{{sample}}_2.fastq.gz",

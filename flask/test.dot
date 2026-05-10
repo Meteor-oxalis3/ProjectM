@@ -1,0 +1,115 @@
+digraph snakemake_dag {
+    graph[bgcolor=white, margin=0];
+    node[shape=box, style=rounded, fontname=sans,                 fontsize=10, penwidth=2];
+    edge[penwidth=2, color=grey];
+        0[label = "all", color = "0.03 0.6 0.85", style="rounded"];
+        1[label = "multiqc", color = "0.38 0.6 0.85", style="rounded"];
+        2[label = "fastqc_raw", color = "0.19 0.6 0.85", style="rounded,dashed"];
+        3[label = "link\nsample: case1", color = "0.32 0.6 0.85", style="rounded,dashed"];
+        4[label = "fastqc_raw", color = "0.19 0.6 0.85", style="rounded,dashed"];
+        5[label = "link\nsample: case2", color = "0.32 0.6 0.85", style="rounded,dashed"];
+        6[label = "fastqc_raw", color = "0.19 0.6 0.85", style="rounded,dashed"];
+        7[label = "link\nsample: control1", color = "0.32 0.6 0.85", style="rounded,dashed"];
+        8[label = "fastqc_raw", color = "0.19 0.6 0.85", style="rounded,dashed"];
+        9[label = "link\nsample: control2", color = "0.32 0.6 0.85", style="rounded,dashed"];
+        10[label = "fastqc_trimmed", color = "0.22 0.6 0.85", style="rounded,dashed"];
+        11[label = "fastp", color = "0.16 0.6 0.85", style="rounded,dashed"];
+        12[label = "fastqc_trimmed", color = "0.22 0.6 0.85", style="rounded,dashed"];
+        13[label = "fastp", color = "0.16 0.6 0.85", style="rounded,dashed"];
+        14[label = "fastqc_trimmed", color = "0.22 0.6 0.85", style="rounded,dashed"];
+        15[label = "fastp", color = "0.16 0.6 0.85", style="rounded,dashed"];
+        16[label = "fastqc_trimmed", color = "0.22 0.6 0.85", style="rounded,dashed"];
+        17[label = "fastp", color = "0.16 0.6 0.85", style="rounded,dashed"];
+        18[label = "samtools", color = "0.41 0.6 0.85", style="rounded,dashed"];
+        19[label = "bwa", color = "0.10 0.6 0.85", style="rounded,dashed"];
+        20[label = "samtools", color = "0.41 0.6 0.85", style="rounded,dashed"];
+        21[label = "bwa", color = "0.10 0.6 0.85", style="rounded,dashed"];
+        22[label = "samtools", color = "0.41 0.6 0.85", style="rounded,dashed"];
+        23[label = "bwa", color = "0.10 0.6 0.85", style="rounded,dashed"];
+        24[label = "samtools", color = "0.41 0.6 0.85", style="rounded,dashed"];
+        25[label = "bwa", color = "0.10 0.6 0.85", style="rounded,dashed"];
+        26[label = "macs3", color = "0.35 0.6 0.85", style="rounded,dashed"];
+        27[label = "alignmentSieve", color = "0.00 0.6 0.85", style="rounded,dashed"];
+        28[label = "macs3", color = "0.35 0.6 0.85", style="rounded,dashed"];
+        29[label = "alignmentSieve", color = "0.00 0.6 0.85", style="rounded,dashed"];
+        30[label = "macs3", color = "0.35 0.6 0.85", style="rounded"];
+        31[label = "alignmentSieve", color = "0.00 0.6 0.85", style="rounded"];
+        32[label = "macs3", color = "0.35 0.6 0.85", style="rounded,dashed"];
+        33[label = "alignmentSieve", color = "0.00 0.6 0.85", style="rounded,dashed"];
+        34[label = "tobias_BINDetect", color = "0.57 0.6 0.85", style="rounded"];
+        35[label = "tobias_ScoreBigwig_case", color = "0.60 0.6 0.85", style="rounded"];
+        36[label = "tobias_ATACorrect_case", color = "0.51 0.6 0.85", style="rounded"];
+        37[label = "samtools_merge_case", color = "0.44 0.6 0.85", style="rounded,dashed"];
+        38[label = "bedtools_merge", color = "0.06 0.6 0.85", style="rounded"];
+        39[label = "idr_control", color = "0.29 0.6 0.85", style="rounded"];
+        40[label = "idr_case", color = "0.25 0.6 0.85", style="rounded,dashed"];
+        41[label = "tobias_ScoreBigwig_control", color = "0.63 0.6 0.85", style="rounded"];
+        42[label = "tobias_ATACorrect_control", color = "0.54 0.6 0.85", style="rounded"];
+        43[label = "samtools_merge_control", color = "0.48 0.6 0.85", style="rounded"];
+        1 -> 0
+        26 -> 0
+        28 -> 0
+        30 -> 0
+        32 -> 0
+        34 -> 0
+        2 -> 1
+        4 -> 1
+        6 -> 1
+        8 -> 1
+        10 -> 1
+        12 -> 1
+        14 -> 1
+        16 -> 1
+        18 -> 1
+        20 -> 1
+        22 -> 1
+        24 -> 1
+        3 -> 2
+        5 -> 4
+        7 -> 6
+        9 -> 8
+        11 -> 10
+        3 -> 11
+        13 -> 12
+        5 -> 13
+        15 -> 14
+        7 -> 15
+        17 -> 16
+        9 -> 17
+        19 -> 18
+        11 -> 19
+        21 -> 20
+        13 -> 21
+        23 -> 22
+        15 -> 23
+        25 -> 24
+        17 -> 25
+        27 -> 26
+        18 -> 27
+        29 -> 28
+        20 -> 29
+        31 -> 30
+        22 -> 31
+        33 -> 32
+        24 -> 33
+        35 -> 34
+        41 -> 34
+        38 -> 34
+        36 -> 35
+        38 -> 35
+        37 -> 36
+        38 -> 36
+        18 -> 37
+        20 -> 37
+        39 -> 38
+        40 -> 38
+        30 -> 39
+        32 -> 39
+        26 -> 40
+        28 -> 40
+        42 -> 41
+        38 -> 41
+        43 -> 42
+        38 -> 42
+        22 -> 43
+}

@@ -20,6 +20,10 @@ args = parser.parse_args()
 os.makedirs(args.outdir, exist_ok=True)
 
 df = pd.read_csv(args.input, sep='\t', index_col=0)
+
+# Normalize to CPM (counts per million) to correct for library size
+df = df.div(df.sum(axis=0), axis=1) * 1e6
+
 meta = pd.read_csv(args.metadata)
 group_dict = dict(zip(meta['ID'], meta['group']))
 groups = sorted(meta['group'].unique())
@@ -60,8 +64,8 @@ res_df['neg_log10_p'] = -np.log10(res_df['pvalue'].clip(lower=1e-300))
 
 # Significance categories
 res_df['sig'] = 'NS'
-res_df.loc[(res_df['pvalue'] < args.pval) & (res_df['log2fc'] >= args.log2fc), 'sig'] = 'Up'
-res_df.loc[(res_df['pvalue'] < args.pval) & (res_df['log2fc'] <= -args.log2fc), 'sig'] = 'Down'
+res_df.loc[(res_df['pvalue'] < args.pval) & (res_df['log2FC'] >= args.log2fc), 'sig'] = 'Up'
+res_df.loc[(res_df['pvalue'] < args.pval) & (res_df['log2FC'] <= -args.log2fc), 'sig'] = 'Down'
 
 # Save results table
 res_df.to_csv(f"{args.outdir}/ko_diff_results.tsv", sep='\t', index=False)

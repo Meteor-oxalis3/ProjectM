@@ -20,7 +20,13 @@ for fpath in args.annotations:
     if not os.path.exists(fpath):
         print(f"Warning: {fpath} not found for sample {sample}")
         continue
-    df = pd.read_csv(fpath, sep='\t', comment='#')
+    with open(fpath) as fh:
+        lines = [l for l in fh if not l.startswith('##')]
+    from io import StringIO
+    raw = pd.read_csv(StringIO(''.join(lines)), sep='\t', header=None)
+    raw = raw[~raw.iloc[:, 0].str.startswith('##')]
+    raw.columns = raw.iloc[0].str.lstrip('#')
+    df = raw.iloc[1:].reset_index(drop=True)
     if 'KEGG_ko' in df.columns:
         for kos in df['KEGG_ko'].dropna():
             for ko in str(kos).split(','):
@@ -29,16 +35,18 @@ for fpath in args.annotations:
                     ko_counts[sample][ko] = ko_counts[sample].get(ko, 0) + 1
 
 all_kos = sorted(set(ko for sc in ko_counts.values() for ko in sc))
-ko_df = pd.DataFrame({s: {ko: ko_counts[s].get(ko, 0) for ko in all_kos} for s in ko_counts}).T
-ko_df.index.name = 'ID'
+# KOs as rows, samples as columns (consistent with species matrix convention)
+ko_df = pd.DataFrame({s: {ko: ko_counts[s].get(ko, 0) for ko in all_kos} for s in ko_counts})
+ko_df.index.name = 'KO'
 ko_df.to_csv(args.output, sep='\t')
 
-ko_rel = ko_df.div(ko_df.sum(axis=1), axis=0).round(6)
+# Relative abundance: normalize by column (sample) total
+ko_rel = ko_df.div(ko_df.sum(axis=0), axis=1).round(6)
 ko_rel.to_csv(args.relative, sep='\t')
 
 meta = pd.read_csv(args.metadata)
 sample_to_group = dict(zip(meta['ID'], meta['group']))
-group_row = [sample_to_group.get(s, "No_Group") for s in ko_rel.index]
+group_row = [sample_to_group.get(s, "No_Group") for s in ko_rel.columns]
 with open(args.group_added, 'w') as f:
     f.write("group\t" + "\t".join(group_row) + "\n")
     ko_rel.to_csv(f, sep='\t', index=True)

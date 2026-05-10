@@ -3,7 +3,7 @@ rule busco_bins:
     BUSCO genome-mode quality assessment on each MetaBAT2 bin.
     Uses --auto-lineage-prok to automatically select the best prokaryotic lineage
     (requires internet access on first run to download the lineage database).
-    Lineage data is cached under /ProjectM/busco_downloads/.
+    Lineage data is cached under /ProjectM/db/busco_downloads/.
     Produces a short_summary per bin and an aggregated TSV report.
     """
     input:
@@ -43,7 +43,7 @@ rule busco_bins:
                     f"  --auto-lineage-prok "
                     f"  -o {bin_name} "
                     f"  --out_path {params.out_dir} "
-                    f"  --download_path /ProjectM/busco_downloads "
+                    f"  --download_path /ProjectM/db/busco_downloads "
                     f"  --cpu {threads} "
                     f"  --force "
                     f"  >> {log_file} 2>&1 || echo 'BUSCO failed for {bin_name}' >> {log_file}"

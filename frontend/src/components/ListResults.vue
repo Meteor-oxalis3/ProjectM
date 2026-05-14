@@ -28,15 +28,25 @@
             </template>
             
             <template v-slot:item.actions="{ item }">
-              <v-btn color="primary" size="small" @click="downloadFile(item.name)">
+              <v-btn color="primary" size="small" @click="downloadFile(item.name)" :disabled="item.status !== 'completed'">
                 <v-icon>mdi-download</v-icon>
+                <v-tooltip v-if="item.status !== 'completed'" activator="parent" location="top">流程未完成，暂不可下载</v-tooltip>
               </v-btn>
             </template>
 
+            <template v-slot:item.status="{ item }">
+              <v-chip v-if="item.status==='completed'" color="success" size="small" variant="tonal">已完成</v-chip>
+              <v-chip v-else-if="item.status==='failed'" color="error" size="small" variant="tonal">失败</v-chip>
+              <v-chip v-else color="warning" size="small" variant="tonal">
+                <v-progress-circular indeterminate size="14" width="2" class="mr-1"></v-progress-circular>
+                运行中
+              </v-chip>
+            </template>
+
             <template v-slot:item.preview="{ item }">
-              <v-btn 
-                color="secondary" 
-                size="small" 
+              <v-btn
+                color="secondary"
+                size="small"
                 @click="openPreview(item.name)"
                 class="ml-2"
               >
@@ -75,7 +85,7 @@
             </v-btn>
           </v-toolbar>
           <div class="workflow" style="width: 100%; height: 100%;">
-            <OpenResultPreview :workflowUuid="selectedWorkflowUuid" />
+            <OpenResultPreview v-if="PreviewDialog" :workflowUuid="selectedWorkflowUuid" />
           </div>
         </v-card>
       </v-dialog>
@@ -93,6 +103,7 @@ interface FolderItem {
   name: string;
   time: string;
   alias: string;
+  status: string;
 }
 
 export default defineComponent({
@@ -103,6 +114,7 @@ export default defineComponent({
     // { title: '流程编号', key: 'name', sortable: true },
     { title: '流程名称', key: 'alias', sortable: true },
     { title: '最后更新', key: 'time', sortable: true },
+    { title: '是否完成', key: 'status', sortable: false, align: 'center' },
     { title: '在线预览', key: 'preview', sortable: false, align: 'center'}, // 新增预览列
     { title: '下载', key: 'actions', sortable: false, align: 'center' },
   ]);
@@ -134,6 +146,7 @@ export default defineComponent({
             name: folder.name,
             time: folder.time,
             alias: folder.alias,
+            status: folder.status || 'running',
           }));
         } else {
           folders.value = [];

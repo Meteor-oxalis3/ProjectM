@@ -1,6 +1,8 @@
 import os
 import time
 import uuid
+os.environ['TZ'] = 'Asia/Shanghai'
+time.tzset()
 
 def user_upload_files(session, User, jsonify):
     user_id = session.get('user_id')

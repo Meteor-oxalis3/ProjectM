@@ -1,6 +1,6 @@
 <template>
     <v-row align="center" justify="center">
-    <v-col cols="5">
+    <v-col cols="8">
     <v-file-input
       label="点击上传文件"
       show-size
@@ -9,7 +9,7 @@
     ></v-file-input>
     </v-col>
 
-    <v-col cols="1">
+    <v-col cols="4">
     <v-btn
       color="primary"
       @click="uploadFile"

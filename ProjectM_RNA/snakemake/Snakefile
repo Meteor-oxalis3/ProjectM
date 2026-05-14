@@ -24,8 +24,8 @@ args_eggnog_data_dir = config.get("eggnog_data_dir", "/ProjectM/db/eggnog/")
 args_eggnog_tax_scope = config.get("eggnog_tax_scope", "prokaryota_broad")
 
 # 命令行传参: LEfSe LDA阈值
-# (可选，默认是2.5)
-args_lefse_LDA = config.get("lefse_LDA", 2.5)
+# (可选，默认是3.0)
+args_lefse_LDA = config.get("lefse_LDA", 3.0)
 
 # 命令行传参: LEfSe分类水平
 # (可选，默认是species)
@@ -112,11 +112,11 @@ rule all:
     # 这里使用expand函数生成所有样本的fastq文件
     # 注意: 虽然是input，但实际上是output
     input:
-        # expand(f"{OUTPUT_DIR}/01_fastqc_raw/{{sample}}_1_fastqc.log", sample=list_ID),
-        # expand(f"{OUTPUT_DIR}/01_fastqc_raw/{{sample}}_2_fastqc.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/01_fastqc_raw/{{sample}}_1_fastqc.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/01_fastqc_raw/{{sample}}_2_fastqc.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/02_fastp/Fastp_{{sample}}.log", sample=list_ID),
-        # expand(f"{OUTPUT_DIR}/03_fastqc_clean/clean_{{sample}}_1_fastqc.log", sample=list_ID),
-        # expand(f"{OUTPUT_DIR}/03_fastqc_clean/clean_{{sample}}_2_fastqc.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/03_fastqc_clean/clean_{{sample}}_1_fastqc.log", sample=list_ID),
+        expand(f"{OUTPUT_DIR}/03_fastqc_clean/clean_{{sample}}_2_fastqc.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/04_bwa_host/bwa_host_{{sample}}.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/05_bwa_phix/bwa_phix_{{sample}}.log", sample=list_ID),
         expand(f"{OUTPUT_DIR}/06_sortmerna/sortmerna_{{sample}}.log", sample=list_ID),
@@ -139,6 +139,7 @@ rule all:
         f"{OUTPUT_DIR}/23_species_heatmap/heatmap.pdf",
         f"{OUTPUT_DIR}/24_differential_boxplot/differential_boxplot.pdf",
         f"{OUTPUT_DIR}/25_rarefaction_curve/rarefaction_curve.pdf",
+        f"{OUTPUT_DIR}/26_ko_kegg_table/ko_kegg_table.html",
 
 include: "rules/00_link_fastq.smk"
 include: "rules/01_fastqc_raw.smk"
@@ -164,3 +165,4 @@ include: "rules/22_stacked_bar.smk"
 include: "rules/23_species_heatmap.smk"
 include: "rules/24_differential_boxplot.smk"
 include: "rules/25_rarefaction_curve.smk"
+include: "rules/26_ko_kegg_table.smk"

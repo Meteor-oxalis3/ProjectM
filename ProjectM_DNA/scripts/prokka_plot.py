@@ -79,7 +79,7 @@ feature_keys = ['CDS', 'tRNA', 'rRNA', 'tmRNA', 'repeat_region',
 feature_keys = [k for k in feature_keys
                 if any(k in feature_data[g] for g in groups)]
 
-fig, ax = plt.subplots(figsize=(max(8, len(feature_keys) * 1.5), 5))
+fig, ax = plt.subplots(figsize=(max(6, len(feature_keys) * 1.2), 4))
 x        = np.arange(len(feature_keys))
 bar_w    = 0.8 / max(len(groups), 1)
 offsets  = np.linspace(-(len(groups)-1)/2 * bar_w,
@@ -92,15 +92,15 @@ for g, offset in zip(groups, offsets):
     for bar, v in zip(bars, vals):
         if v:
             ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + max(vals)*0.01,
-                    f'{v:,}', ha='center', va='bottom', fontsize=7)
+                    f'{v:,}', ha='center', va='bottom', fontsize=8)
 
 ax.set_xticks(x)
-ax.set_xticklabels(feature_keys, fontsize=10)
-ax.set_ylabel('Count', fontsize=11)
-ax.set_title('Prokka Annotation — Feature Counts by Group', fontsize=13, fontweight='bold')
+ax.set_xticklabels(feature_keys, fontsize=12)
+ax.set_ylabel('Count', fontsize=12)
+ax.set_title('Prokka Annotation — Feature Counts by Group', fontsize=14, fontweight="bold")
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-ax.legend(frameon=False, fontsize=10)
+ax.legend(frameon=False, fontsize=12)
 plt.tight_layout()
 plt.savefig(f"{args.outdir}/prokka_feature_counts.pdf", dpi=300, bbox_inches='tight')
 plt.savefig(f"{args.outdir}/prokka_feature_counts.png", dpi=150, bbox_inches='tight')
@@ -112,7 +112,7 @@ print("Plot 1 done: feature counts")
 # ═══════════════════════════════════════════════════════════════════════════════
 if tsv_data:
     n_groups = len(groups)
-    fig, axes = plt.subplots(1, n_groups, figsize=(5 * n_groups, 5))
+    fig, axes = plt.subplots(1, n_groups, figsize=(4 * n_groups, 4))
     if n_groups == 1:
         axes = [axes]
 
@@ -140,14 +140,14 @@ if tsv_data:
             sizes, labels=None, colors=colors,
             startangle=90, wedgeprops=dict(width=0.55, edgecolor='white', linewidth=2)
         )
-        ax.set_title(g, fontsize=13, fontweight='bold', pad=10)
+        ax.set_title(g, fontsize=14, fontweight="bold", pad=10)
         ax.text(0, 0, f'{total:,}\nCDS', ha='center', va='center',
                 fontsize=11, fontweight='bold')
 
         patches = [mpatches.Patch(color=c, label=l)
                    for c, l in zip(colors, labels)]
         ax.legend(handles=patches, loc='lower center',
-                  bbox_to_anchor=(0.5, -0.18), frameon=False, fontsize=9)
+                  bbox_to_anchor=(0.5, -0.18), frameon=False, fontsize=12)
 
     fig.suptitle('CDS Annotation Rate', fontsize=14, fontweight='bold')
     plt.tight_layout()
@@ -162,7 +162,7 @@ if tsv_data:
 if tsv_data:
     n_groups = len(groups)
     fig, axes = plt.subplots(1, n_groups,
-                              figsize=(10 * n_groups, max(6, args.top_n * 0.32)))
+                              figsize=(7 * n_groups, max(6, args.top_n * 0.32)))
     if n_groups == 1:
         axes = [axes]
 
@@ -185,16 +185,16 @@ if tsv_data:
         bars = ax.barh(range(len(top)), top.values, color=color_map[g], alpha=0.85,
                        edgecolor='white')
         ax.set_yticks(range(len(top)))
-        ax.set_yticklabels(top.index, fontsize=8)
+        ax.set_yticklabels(top.index, fontsize=12)
         ax.invert_yaxis()
-        ax.set_xlabel('Gene count', fontsize=10)
+        ax.set_xlabel('Gene count', fontsize=12)
         ax.set_title(f'Top {args.top_n} Functional Products\n({g})',
-                     fontsize=12, fontweight='bold')
+                     fontsize=13, fontweight="bold")
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
         for bar, v in zip(bars, top.values):
             ax.text(v + top.values.max()*0.01, bar.get_y() + bar.get_height()/2,
-                    str(v), va='center', fontsize=7)
+                    str(v), va='center', fontsize=8)
 
     plt.tight_layout()
     plt.savefig(f"{args.outdir}/prokka_top_products.pdf", dpi=300, bbox_inches='tight')
@@ -233,7 +233,7 @@ if len(tsv_data) >= 2 and all('product' in tsv_data[g].columns for g in tsv_data
         total  = [x + y for x, y in zip(x_vals, y_vals)]
         sizes  = [max(20, t * 6) for t in total]
 
-        fig, ax = plt.subplots(figsize=(8, 7))
+        fig, ax = plt.subplots(figsize=(6, 5.5))
         sc = ax.scatter(x_vals, y_vals, s=sizes, alpha=0.65,
                         c=total, cmap='YlOrRd', edgecolors='gray', linewidths=0.5)
 
@@ -242,14 +242,14 @@ if len(tsv_data) >= 2 and all('product' in tsv_data[g].columns for g in tsv_data
         for rank, (tot, prod, xv, yv) in enumerate(paired[:15]):
             short = prod[:35] + '…' if len(prod) > 35 else prod
             ax.annotate(short, (xv, yv), textcoords='offset points',
-                        xytext=(5, 4), fontsize=6.5, color='#333333')
+                        xytext=(5, 4), fontsize=8, color='#333333')
 
         diag = max(max(x_vals), max(y_vals)) * 1.05
         ax.plot([0, diag], [0, diag], 'k--', lw=0.8, alpha=0.4, label='equal')
-        ax.set_xlabel(f'{g0} gene count', fontsize=11)
-        ax.set_ylabel(f'{g1} gene count', fontsize=11)
+        ax.set_xlabel(f'{g0} gene count', fontsize=12)
+        ax.set_ylabel(f'{g1} gene count', fontsize=12)
         ax.set_title('Shared & Group-Enriched Functional Products',
-                     fontsize=12, fontweight='bold')
+                     fontsize=13, fontweight="bold")
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
         plt.colorbar(sc, ax=ax, label='Total count', shrink=0.7)

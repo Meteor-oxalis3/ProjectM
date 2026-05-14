@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center" align="center" style="background: linear-gradient(to bottom, #cbfed8, #94b9fd); height: 50vh;">
-      <v-img src="/ProjectM_new.jpg" ></v-img>
+      <v-img src="/projectm_logo.png" ></v-img>
   </v-row>
 
   <v-row justify="center" align="center" style="background-color: #94b9fd; height: 5vh;">

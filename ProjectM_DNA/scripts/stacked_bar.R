@@ -73,22 +73,22 @@ p <- ggplot(agg, aes(x = SampleID, y = abundance, fill = label)) +
     x     = NULL,
     y     = "Relative Abundance"
   ) +
-  theme_classic(base_size = 11) +
+  theme_classic(base_size = 13) +
   theme(
-    axis.text.x      = element_text(angle = 45, hjust = 1, size = 8),
-    legend.text      = element_text(size = 7, face = "italic"),
-    legend.key.size  = unit(0.38, "cm"),
-    legend.title     = element_text(size = 9, face = "bold"),
+    axis.text.x      = element_text(angle = 45, hjust = 1, size = 10),
+    legend.text      = element_text(size = 9, face = "italic"),
+    legend.key.size  = unit(0.45, "cm"),
+    legend.title     = element_text(size = 11, face = "bold"),
     strip.background = element_rect(fill = "#E8E8E8", colour = NA),
-    strip.text       = element_text(face = "bold", size = 10),
-    plot.title       = element_text(face = "bold", hjust = 0.5, size = 12),
+    strip.text       = element_text(face = "bold", size = 11),
+    plot.title       = element_text(face = "bold", hjust = 0.5, size = 14),
     panel.spacing    = unit(0.3, "cm")
   ) +
   guides(fill = guide_legend(ncol = 1, reverse = TRUE))
 
-width_in <- max(10, length(sample_order) * 0.9 + 5)
+width_in <- max(6, length(sample_order) * 0.6 + 3)
 ggsave(paste0(opt$outdir, "/stacked_bar.pdf"), plot = p,
-       width = width_in, height = 7, dpi = 300)
+       width = width_in, height = 5.5, dpi = 300)
 ggsave(paste0(opt$outdir, "/stacked_bar.png"), plot = p,
-       width = width_in, height = 7, dpi = 150)
+       width = width_in, height = 5.5, dpi = 150)
 cat(sprintf("Stacked bar chart saved → %s/stacked_bar.pdf\n", opt$outdir))

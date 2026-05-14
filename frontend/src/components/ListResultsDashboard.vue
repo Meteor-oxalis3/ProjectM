@@ -20,14 +20,14 @@
             </template>
 
             <template v-slot:item.actions="{ item }">
-              <v-btn color="primary" size="small" @click="downloadFile(item.name)" :disabled="!item.completed">
+              <v-btn color="primary" size="small" @click="downloadFile(item.name)" :disabled="item.status !== 'completed'">
                 <v-icon>mdi-download</v-icon>
+                <v-tooltip v-if="item.status !== 'completed'" activator="parent" location="top">流程未完成，暂不可下载</v-tooltip>
               </v-btn>
             </template>
 
             <template v-slot:item.preview="{ item }">
-              <v-btn color="secondary" size="small" @click="openPreview(item.name)" class="ml-2"
-                :disabled="!item.completed">
+              <v-btn color="secondary" size="small" @click="openPreview(item.name)" class="ml-2">
                 <v-icon>mdi-eye</v-icon>
               </v-btn>
             </template>
@@ -64,7 +64,7 @@
           </v-btn>
         </v-toolbar>
         <div class="workflow" style="width: 100%; height: 100%;">
-          <OpenResultPreview :workflowUuid="selectedWorkflowUuid" />
+          <OpenResultPreview v-if="PreviewDialog" :workflowUuid="selectedWorkflowUuid" />
         </div>
       </v-card>
     </v-dialog>
@@ -81,7 +81,7 @@ interface FolderItem {
   name: string;
   time: string;
   alias: string;
-  completed: boolean;
+  status: string;
 }
 
 export default defineComponent({
@@ -90,8 +90,8 @@ export default defineComponent({
     const sortBy: any = [{ key: 'time', order: 'desc' }];
     const headers: any = ref([
       // { title: '流程编号', key: 'name', sortable: true },
-      { title: '流程名称', key: 'alias', sortable: true },
-      { title: '最后更新', key: 'time', sortable: true },
+      { title: '流程名称', key: 'alias', sortable: true, align: 'start' },
+      { title: '最后更新', key: 'time', sortable: true, align: 'start' },
       { title: '在线预览', key: 'preview', sortable: false, align: 'center' }, // 新增预览列
       { title: '下载', key: 'actions', sortable: false, align: 'center' },
     ]);
@@ -123,7 +123,7 @@ export default defineComponent({
             name: folder.name,
             time: folder.time,
             alias: folder.alias,
-            completed: folder.completed,  // 确保 completed 字段被正确存储
+            status: folder.status || 'running',  // 确保 completed 字段被正确存储
           }));
         } else {
           folders.value = [];

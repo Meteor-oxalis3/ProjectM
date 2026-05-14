@@ -84,41 +84,47 @@ names(sample_colors) <- common
 
 # ── Rarefaction curve plot ─────────────────────────────────────────────────────
 pdf(file.path(arguments$outdir, "rarefaction_curve.pdf"),
-    width = 8, height = 7)
+    width = 6, height = 5)
 
 rarecurve(counts_t,
           step  = max(1, floor(min_depth / 100)),
           sample = NULL,
           col    = sample_colors,
-          lwd    = 1.8,
-          cex    = 0.7,
+          lwd    = 1.5,
+          cex    = 0.8,
           label  = TRUE,
           ylab   = "Number of Species (Richness)",
           xlab   = "Number of Reads Sampled",
-          main   = "Rarefaction Curves")
+          main   = "Rarefaction Curves",
+          cex.lab = 1.2,
+          cex.axis = 1.0,
+          cex.main = 1.3)
 
 # Add vertical line at rarefaction depth
 abline(v = rarefy_depth, lty = 2, col = "darkgray", lwd = 1.2)
 text(x = rarefy_depth * 0.88, y = max(rowSums(counts_t > 0)) * 0.95,
      labels = sprintf("Resampling depth: %.0f reads", rarefy_depth),
-     cex = 0.8, col = "darkgray")
+     cex = 1.0, col = "darkgray")
 
 invisible(dev.off())
 
 # ── PNG version ────────────────────────────────────────────────────────────────
 png(file.path(arguments$outdir, "rarefaction_curve.png"),
-    width = 8, height = 7, units = "in", res = 150)
+    width = 6, height = 5, units = "in", res = 150)
 
 rarecurve(counts_t,
           step  = max(1, floor(min_depth / 100)),
           sample = NULL,
           col    = sample_colors,
-          lwd    = 1.8,
-          cex    = 0.7,
+          lwd    = 1.5,
+          cex    = 0.8,
           label  = TRUE,
           ylab   = "Number of Species (Richness)",
           xlab   = "Number of Reads Sampled",
-          main   = "Rarefaction Curves")
+          main   = "Rarefaction Curves",
+          cex.lab = 1.2,
+          cex.axis = 1.0,
+          cex.main = 1.3)
 
 abline(v = rarefy_depth, lty = 2, col = "darkgray", lwd = 1.2)
 

@@ -52,13 +52,13 @@ color_map = {g: GROUP_COLORS[i % len(GROUP_COLORS)] for i, g in enumerate(groups
 # ── Figure layout ─────────────────────────────────────────────────────────────
 n_rows = len(data_plot)
 n_cols = len(cols_sorted)
-fig_w = max(9, n_cols * 1.1 + 3)
-fig_h = max(8, n_rows * 0.38 + 2)
+fig_w = max(7, n_cols * 0.7 + 2)
+fig_h = max(6, n_rows * 0.32 + 1.5)
 
 fig = plt.figure(figsize=(fig_w, fig_h))
 
 # axes: [left, bottom, width, height] in figure fraction
-left_margin  = 0.32
+left_margin  = 0.38
 right_margin = 0.10
 top_band     = 0.04   # group color bar height fraction
 cb_width     = 0.025
@@ -82,12 +82,12 @@ im = ax_heat.imshow(data_plot.values, aspect='auto',
                     interpolation='nearest')
 
 ax_heat.set_xticks(range(n_cols))
-ax_heat.set_xticklabels(cols_sorted, rotation=45, ha='right', fontsize=8)
+ax_heat.set_xticklabels(cols_sorted, rotation=45, ha='right', fontsize=10)
 ax_heat.set_yticks(range(n_rows))
 yticklabels = (data_plot.index
                .str.replace('s__', '', regex=False)
                .str.replace('_', ' ', regex=False))
-ax_heat.set_yticklabels(yticklabels, fontsize=7.5, style='italic')
+ax_heat.set_yticklabels(yticklabels, fontsize=9, style='italic')
 ax_heat.tick_params(axis='x', which='both', length=0)
 ax_heat.tick_params(axis='y', which='both', length=0)
 
@@ -101,17 +101,17 @@ ax_group.axis('off')
 
 # ── Colorbar ──────────────────────────────────────────────────────────────────
 cbar = plt.colorbar(im, cax=ax_cb)
-cbar.set_label('log₁₀(relative abundance)', fontsize=8)
-cbar.ax.tick_params(labelsize=7)
+cbar.set_label('log₁₀(relative abundance)', fontsize=10)
+cbar.ax.tick_params(labelsize=9)
 
 # ── Legend ────────────────────────────────────────────────────────────────────
 patches = [mpatches.Patch(color=color_map[g], label=g) for g in groups]
 ax_heat.legend(handles=patches, title='Group', frameon=False,
-               fontsize=8, title_fontsize=9,
+               fontsize=10, title_fontsize=11,
                loc='upper left', bbox_to_anchor=(0, -0.18))
 
 ax_group.set_title(f'Top {args.top_n} Species Heatmap',
-                   fontsize=12, fontweight='bold', pad=6)
+                   fontsize=14, fontweight='bold', pad=6)
 
 plt.savefig(f"{args.outdir}/heatmap.pdf", dpi=300, bbox_inches='tight')
 plt.savefig(f"{args.outdir}/heatmap.png", dpi=150, bbox_inches='tight')

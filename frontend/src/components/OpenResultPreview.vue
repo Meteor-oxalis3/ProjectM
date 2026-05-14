@@ -1,7 +1,16 @@
 <template>
     <v-card flat>
       <v-card-text>
-        <v-data-table :headers="headers" :items="files" dense>
+        <v-text-field
+          v-model="search"
+          label="搜索文件..."
+          prepend-icon="mdi-magnify"
+          clearable
+          density="compact"
+          variant="outlined"
+          class="mb-2"
+        ></v-text-field>
+        <v-data-table :headers="headers" :items="filteredFiles" dense>
           <template v-slot:item.filename="{ item }">
             {{ item.filename }}
           </template>
@@ -38,7 +47,7 @@
   </template>
   
   <script lang="ts">
-  import { defineComponent, ref, watch } from 'vue';
+  import { defineComponent, ref, watch, computed } from 'vue';
   import axios from 'axios';
   
   export default defineComponent({
@@ -51,6 +60,11 @@
     },
     setup(props) {
       const files = ref<{ filename: string; url: string }[]>([]);
+      const search = ref('');
+      const filteredFiles = computed(() => {
+        const q = search.value.toLowerCase();
+        return q ? files.value.filter(f => f.filename.toLowerCase().includes(q)) : files.value;
+      });
       const lastUpdated = ref<string>('');
       const previewDialog = ref(false);
       const selectedUrl = ref<string | null>(null);
@@ -103,6 +117,8 @@
       return {
         headers,
         files,
+        search,
+        filteredFiles,
         lastUpdated,
         previewDialog,
         selectedUrl,

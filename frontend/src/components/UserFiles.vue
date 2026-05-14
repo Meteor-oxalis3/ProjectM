@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row justify="center" align="center">
-      <v-card width="80%" class="d-flex flex-column">
+      <v-card width="100%" class="d-flex flex-column">
   <v-toolbar color="primary" dark>
     <v-card-title>已上传的文件</v-card-title>
     <v-spacer />
@@ -71,16 +71,24 @@
       <v-card>
         <v-toolbar color="primary" dark title="AI 编排">
           <v-spacer />
-          <v-btn @click="copyToClipboard">
-            <v-icon icon='mdi-tooltip-question-outline'></v-icon>
-            &nbsp;示例
+          <v-btn @click="copyDNA">
+            宏基因组 示例
             <v-tooltip activator="parent" location="top">
-              (点击按钮可复制：)<br>
-              我有几个ATAC-seq测序样本，<br>
-              实验组1有SRR13849307_1和SRR13849307_2，<br>
-              实验组2有SRR13849313_1和SRR13849313_2，<br>
-              对照组1有SRR13849295_1和SRR13849295_2，<br>
-              对照组2有SRR13849301_1和SRR13849301_2
+              (点击按钮可复制宏基因组示例)<br>
+              UC组(5个): M2026C1_MGX(SRR5947819) M2026C2_MGX(SRR5947837)<br>
+              M2026C3_MGX(SRR5947861) M2026C4_MGX(SRR5947824) M2026C7_MGX(SRR5947881)<br>
+              nonIBD组(3个): H4008C1_MGX(SRR5947872) H4008C2_MGX(SRR5947879)<br>
+              H4008C3_MGX(SRR5947810)
+            </v-tooltip>
+          </v-btn>
+          <v-btn @click="copyRNA" class="ml-2">
+            宏转录组 示例
+            <v-tooltip activator="parent" location="top">
+              (点击按钮可复制宏转录组示例)<br>
+              UC组(5个): M2026C1_MTX(SRR5947819) M2026C2_MTX(SRR5947837)<br>
+              M2026C3_MTX(SRR5947861) M2026C4_MTX(SRR5947824) M2026C7_MTX(SRR5947881)<br>
+              nonIBD组(3个): H4008C1_MTX(SRR5947872) H4008C2_MTX(SRR5947879)<br>
+              H4008C3_MTX(SRR5947810)
             </v-tooltip>
           </v-btn>
         </v-toolbar>
@@ -165,6 +173,14 @@
     </v-card>
   </v-dialog>
   </v-container>
+
+    <!-- 操作结果提示 -->
+    <v-snackbar v-model="snackbar" :color="snackbarColor" location="top" timeout="3000">
+      {{ snackbarMsg }}
+      <template #actions>
+        <v-btn variant="text" @click="snackbar = false">关闭</v-btn>
+      </template>
+    </v-snackbar>
 </template>
 
 <script lang="ts">
@@ -176,6 +192,9 @@ import { useRouter } from 'vue-router';
 
 const ErrDialog = ref(false)
 const OKDialog = ref(false)
+const snackbar = ref(false)
+const snackbarMsg = ref('')
+const snackbarColor = ref('success')
 
 interface FileItem {
   id: number;
@@ -201,7 +220,8 @@ export default defineComponent({
     const isLoading = ref(false);
     const isSubmitLoading = ref(false);
     const isDeleting = ref(false);
-    const textToCopy = ref("我有几个ATAC-seq测序样本，实验组1有SRR13849307_1和SRR13849307_2，实验组2有SRR13849313_1和SRR13849313_2，对照组1有SRR13849295_1和SRR13849295_2，对照组2有SRR13849301_1和SRR13849301_2");
+    const textDNA = ref("我有8个IBD粪便宏基因组样本，UC组5个：M2026C1_MGX(SRR5947819) M2026C2_MGX(SRR5947837) M2026C3_MGX(SRR5947861) M2026C4_MGX(SRR5947824) M2026C7_MGX(SRR5947881)，nonIBD组3个：H4008C1_MGX(SRR5947872) H4008C2_MGX(SRR5947879) H4008C3_MGX(SRR5947810)，双端FASTQ，请按ID,fastq1,fastq2,group格式生成样本表");
+    const textRNA = ref("我有8个IBD粪便宏转录组样本，UC组5个：M2026C1_MTX(SRR5947819) M2026C2_MTX(SRR5947837) M2026C3_MTX(SRR5947861) M2026C4_MTX(SRR5947824) M2026C7_MTX(SRR5947881)，nonIBD组3个：H4008C1_MTX(SRR5947872) H4008C2_MTX(SRR5947879) H4008C3_MTX(SRR5947810)，双端FASTQ，请按ID,fastq1,fastq2,group格式生成样本表");
 
     const processName = ref('');
     const router = useRouter();
@@ -218,12 +238,15 @@ export default defineComponent({
     });
 
 
-    const copyToClipboard = async () => {
+    const copyDNA = async () => {
       try {
-        await navigator.clipboard.writeText(textToCopy.value);
-      } catch (err) {
-        console.error("复制失败:", err);
-      }
+        await navigator.clipboard.writeText(textDNA.value);
+      } catch (err) { console.error("复制失败:", err); }
+    };
+    const copyRNA = async () => {
+      try {
+        await navigator.clipboard.writeText(textRNA.value);
+      } catch (err) { console.error("复制失败:", err); }
     };
     
     const confirmDelete = async () => {
@@ -237,15 +260,17 @@ export default defineComponent({
         });
 
         if (response.data.success) {
-          alert('Files deleted successfully');
+          snackbarMsg.value = '文件删除成功';
+          snackbarColor.value = 'success';
+          snackbar.value = true;
           selectedFiles.value = [];
           await refreshFiles();
         } else {
-          alert('Failed to delete files');
+          snackbarMsg.value = '文件删除失败，请重试'; snackbarColor.value = 'error'; snackbar.value = true;
         }
       } catch (error) {
         console.error('Error deleting files:', error);
-        alert('Failed to delete files');
+        snackbarMsg.value = '文件删除失败，请重试'; snackbarColor.value = 'error'; snackbar.value = true;
       } finally {
         isDeleting.value = false;
       }
@@ -265,7 +290,7 @@ export default defineComponent({
         }
       } catch (error) {
         console.error('Error fetching files:', error);
-        alert('Failed to fetch files');
+        snackbarMsg.value = '获取文件列表失败'; snackbarColor.value = 'error'; snackbar.value = true;
       }
     };
 
@@ -275,7 +300,7 @@ export default defineComponent({
         await fetchFiles();
       } catch (error) {
         console.error('Error refreshing files:', error);
-        alert('Failed to refresh files');
+        snackbarMsg.value = '刷新文件列表失败'; snackbarColor.value = 'error'; snackbar.value = true;
       } finally {
         isLoading.value = false;
       }
@@ -310,7 +335,9 @@ export default defineComponent({
         }
       } catch (error) {
         console.error('Error sending data:', error);
-        alert('Submission failed');
+        snackbarMsg.value = '提交失败，请检查输入文件和提示词';
+        snackbarColor.value = 'error';
+        snackbar.value = true;
       } finally {
         isSubmitLoading.value = false;
       }
@@ -346,7 +373,8 @@ export default defineComponent({
       confirmDelete,
       isDeleting,
       sortBy,
-      copyToClipboard,
+      copyDNA,
+      copyRNA,
       processName,
       selectedSpecies,
       speciesOptions,

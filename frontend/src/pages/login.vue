@@ -4,7 +4,7 @@
 
   <v-row justify="center" align="center" style="background: linear-gradient(to bottom, #cbfed8, #94b9fd); height: 50vh;">
     <v-col cols="1"></v-col>
-      <v-img src="/ProjectM_new.jpg" ></v-img>
+      <v-img src="/projectm_logo.png" ></v-img>
     <v-col cols="1"></v-col>
     <v-col cols="4">
       <v-card style="margin-top: 5%; margin-bottom: 5%;" height="auto">
@@ -123,7 +123,7 @@ export default defineComponent({
 
     const autoFillAndLogin = () => {
       username.value = 'demo'; // 替换为你的账号
-      password.value = 'Ww@043475'; // 替换为你的密码
+      password.value = 'demo123';
 
       // 短暂延迟后自动提交
       setTimeout(login, 500);

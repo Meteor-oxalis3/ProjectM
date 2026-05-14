@@ -4,7 +4,7 @@
 
     <v-col cols="8">
     <iframe 
-    src="https://ward.projectm.org"
+    src="https://ward.meteor-oxalis3.com"
     width="100%"
     height="99%"
     frameborder="false"

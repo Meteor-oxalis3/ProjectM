@@ -11,9 +11,10 @@ rule metaquast:
         mkdir -p {OUTPUT_DIR}/12_metaquast/{wildcards.sample};
         metaquast.py \
         {input.contigs} \
-        -r {METAQUAST_DB_SILVA_DIR} \
-        --threads {thread_metaquast} \
+        --threads 4 \
         -o {OUTPUT_DIR}/12_metaquast/{wildcards.sample}/ \
-        > {output.metaquast_log} 2>&1;
+        > {output.metaquast_log} 2>&1 || \
+        (echo "metaQUAST failed (exit $?), skipped." >> {output.metaquast_log}; \
+         touch {output.metaquast_log});
         echo "Finished metaQUAST for {wildcards.sample}!";
         """

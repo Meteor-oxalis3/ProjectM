@@ -60,8 +60,8 @@ color_map = {g: GROUP_COLORS[i % len(GROUP_COLORS)] for i, g in enumerate(groups
 metrics = ['Shannon', 'Simpson', 'Observed_Species']
 labels  = ['Shannon Diversity Index', "Simpson's Diversity Index", 'Observed Species']
 
-fig, axes = plt.subplots(1, 3, figsize=(13, 5))
-fig.suptitle('Alpha Diversity by Group', fontsize=14, fontweight='bold', y=1.02)
+fig, axes = plt.subplots(1, 3, figsize=(9, 4))
+fig.suptitle('Alpha Diversity by Group', fontsize=15, fontweight='bold', y=1.02)
 
 np.random.seed(42)
 for ax, metric, label in zip(axes, metrics, labels):
@@ -81,7 +81,7 @@ for ax, metric, label in zip(axes, metrics, labels):
     for i, (g, data) in enumerate(zip(groups, group_data), 1):
         jitter = np.random.uniform(-0.07, 0.07, size=len(data))
         ax.scatter(i + jitter, data, color=color_map[g],
-                   s=55, zorder=4, edgecolors='black', linewidth=0.6)
+                   s=40, zorder=4, edgecolors="black", linewidth=0.6)
 
     # Mann-Whitney U for 2 groups; Kruskal-Wallis otherwise
     if len(groups) == 2 and len(group_data[0]) > 0 and len(group_data[1]) > 0:
@@ -94,18 +94,18 @@ for ax, metric, label in zip(axes, metrics, labels):
                  y_top + y_range * 0.12, y_top + y_range * 0.05],
                 color='black', lw=1)
         ax.text(1.5, y_top + y_range * 0.14, pval_str,
-                ha='center', va='bottom', fontsize=9, style='italic')
+                ha='center', va='bottom', fontsize=11, style="italic")
 
     ax.set_xticks(range(1, len(groups) + 1))
-    ax.set_xticklabels(groups, fontsize=10)
-    ax.set_ylabel(label, fontsize=10)
-    ax.set_title(label, fontsize=11, fontweight='bold')
+    ax.set_xticklabels(groups, fontsize=12)
+    ax.set_ylabel(label, fontsize=12)
+    ax.set_title(label, fontsize=13, fontweight="bold")
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
 
 patches = [mpatches.Patch(color=color_map[g], label=g, alpha=0.75) for g in groups]
 fig.legend(handles=patches, loc='lower center', ncol=len(groups),
-           bbox_to_anchor=(0.5, -0.06), frameon=False, fontsize=10)
+           bbox_to_anchor=(0.5, -0.06), frameon=False, fontsize=12)
 
 plt.tight_layout()
 plt.savefig(f"{args.outdir}/alpha_diversity.pdf", dpi=300, bbox_inches='tight')

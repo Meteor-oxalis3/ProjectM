@@ -150,11 +150,26 @@ def get_dashboard_results():
     result = dashboard_results(session, User, jsonify, WorkflowAlias, db)
     return result
 
-# 预览
+# 预览（获取文件列表）
 @app.route('/preview', methods=['POST'])
 def to_preview():
     result = preview_results(jsonify, request, session)
     return result
+
+# 直接提供结果文件（图片/PDF 内联预览）
+@app.route('/results_file', methods=['GET'])
+def serve_result_file():
+    from flask import send_file, request as req
+    import os
+    user_id = req.args.get('user_id')
+    workflow_uuid = req.args.get('workflow_uuid')
+    file_path = req.args.get('file')
+    if not all([user_id, workflow_uuid, file_path]):
+        return jsonify({"error": "Missing parameters"}), 400
+    abs_path = os.path.join('/ProjectM/users', str(user_id), 'workflows', str(workflow_uuid), 'output', file_path)
+    if not os.path.isfile(abs_path):
+        return jsonify({"error": "File not found"}), 404
+    return send_file(abs_path)
 
 # 上传文件
 @app.route('/upload_raw_files', methods=['POST'])

@@ -23,8 +23,13 @@
               {{ formatTime(item.time) }}
             </template>
 
-            <template v-slot:item.completed="{ item }">
-              <span>{{ item.completed ? '✅' : '⏳' }}</span>
+            <template v-slot:item.status="{ item }">
+              <v-chip v-if="item.status==='completed'" color="success" size="small" variant="tonal">已完成</v-chip>
+              <v-chip v-else-if="item.status==='failed'" color="error" size="small" variant="tonal">失败</v-chip>
+              <v-chip v-else color="warning" size="small" variant="tonal">
+                <v-progress-circular indeterminate size="14" width="2" class="mr-1"></v-progress-circular>
+                运行中
+              </v-chip>
             </template>
 
             <template v-slot:item.actions="{ item }">
@@ -84,7 +89,7 @@ interface FolderItem {
   name: string;
   time: string;
   alias: string;
-  completed: boolean;
+  status: string;
 }
 
 // 按钮点击事件
@@ -105,10 +110,10 @@ export default defineComponent({
     const sortBy: any = [{ key: 'time', order: 'desc' }];
     const headers: any = ref([
       // { title: '流程编号', key: 'name', sortable: true },
-      { title: '流程名称', key: 'alias', sortable: true },
-      { title: '最后更新', key: 'time', sortable: true },
+      { title: '流程名称', key: 'alias', sortable: true, align: 'start' },
+      { title: '最后更新', key: 'time', sortable: true, align: 'start' },
       { title: '监控', key: 'actions', sortable: false, align: 'center' },
-      { title: '是否完成', key: 'completed', sortable: false, align: 'center' },
+      { title: '是否完成', key: 'status', sortable: false, align: 'center' },
     ]);
 
     const folders = ref<FolderItem[]>([]);
@@ -152,7 +157,7 @@ export default defineComponent({
             name: folder.name,
             time: folder.time,
             alias: folder.alias,
-            completed: folder.completed,
+            status: folder.status || 'running',
           }));
         } else {
           folders.value = [];

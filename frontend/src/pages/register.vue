@@ -3,7 +3,7 @@
   </v-row>
 
   <v-row justify="center" align="center" style="background: linear-gradient(to bottom, #cbfed8, #94b9fd); height: 50vh;">
-      <v-img src="/ProjectM_new.jpg"></v-img>
+      <v-img src="/projectm_logo.png"></v-img>
     <v-col cols="5">
       <v-card style="margin-top: 5%;margin-bottom: 5%;">
         <v-card-title class="text-h4" style="text-align: center;">注册</v-card-title>

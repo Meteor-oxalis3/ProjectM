@@ -77,9 +77,9 @@ n = len(matched_rows)
 ncols = min(4, n)
 nrows = (n + ncols - 1) // ncols
 fig, axes = plt.subplots(nrows, ncols,
-                         figsize=(ncols * 3.2, nrows * 3.5),
+                         figsize=(ncols * 2.4, nrows * 2.8),
                          squeeze=False)
-fig.suptitle('Top Differential Species (LEfSe)', fontsize=13,
+fig.suptitle('Top Differential Species (LEfSe)', fontsize=14,
              fontweight='bold', y=1.01)
 
 np.random.seed(42)
@@ -107,7 +107,7 @@ for ax_idx, (lefse_row, matrix_key) in enumerate(matched_rows):
         if len(data):
             jitter = np.random.uniform(-0.07, 0.07, size=len(data))
             ax.scatter(i + jitter, data, color=color_map[g],
-                       s=45, zorder=4, edgecolors='black', linewidth=0.5)
+                       s=40, zorder=4, edgecolors='black', linewidth=0.5)
 
     # Significance bracket
     if len(groups) == 2 and len(group_data[0]) > 0 and len(group_data[1]) > 0:
@@ -122,11 +122,11 @@ for ax_idx, (lefse_row, matrix_key) in enumerate(matched_rows):
                  y_top + y_span*0.12, y_top + y_span*0.05],
                 color='black', lw=0.9)
         ax.text(1.5, y_top + y_span*0.13, pval_str,
-                ha='center', va='bottom', fontsize=8)
+                ha='center', va='bottom', fontsize=12)
 
     ax.set_xticks(range(1, len(groups) + 1))
-    ax.set_xticklabels(groups, fontsize=8)
-    ax.set_ylabel('Relative Abundance', fontsize=7)
+    ax.set_xticklabels(groups, fontsize=12)
+    ax.set_ylabel("Relative Abundance", fontsize=9)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
 
@@ -136,7 +136,7 @@ for ax_idx, (lefse_row, matrix_key) in enumerate(matched_rows):
     enrich  = lefse_row.get('enriched_group', '')
     lda_val = lefse_row.get('lda', '')
     ax.set_title(f"$\\it{{{sp_name}}}$\n[{enrich}, LDA={lda_val:.2f}]",
-                 fontsize=7.5, pad=3)
+                 fontsize=9, pad=3)
 
 # Hide unused subplots
 for ax_idx in range(len(matched_rows), nrows * ncols):
@@ -145,7 +145,7 @@ for ax_idx in range(len(matched_rows), nrows * ncols):
 
 patches = [mpatches.Patch(color=color_map[g], label=g, alpha=0.75) for g in groups]
 fig.legend(handles=patches, loc='lower center', ncol=len(groups),
-           bbox_to_anchor=(0.5, -0.03), frameon=False, fontsize=10)
+           bbox_to_anchor=(0.5, -0.03), frameon=False, fontsize=12)
 
 plt.tight_layout()
 plt.savefig(f"{args.outdir}/differential_boxplot.pdf", dpi=300, bbox_inches='tight')

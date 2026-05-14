@@ -57,27 +57,27 @@ pc2 = coords[:, 1] if coords.shape[1] > 1 else np.zeros(n)
 GROUP_COLORS = ['#E07A5F', '#3D6B8F', '#81B29A', '#F2CC8F']
 color_map = {g: GROUP_COLORS[i % len(GROUP_COLORS)] for i, g in enumerate(groups)}
 
-fig, ax = plt.subplots(figsize=(7, 6))
+fig, ax = plt.subplots(figsize=(5.5, 4.5))
 
 for g in groups:
     mask = np.array([group_dict.get(s) == g for s in X.index])
-    ax.scatter(pc1[mask], pc2[mask], c=color_map[g], s=130, label=g,
+    ax.scatter(pc1[mask], pc2[mask], c=color_map[g], s=100, label=g,
                edgecolors='black', linewidth=0.8, zorder=3, alpha=0.9)
 
 # Sample labels
 for i, sample in enumerate(X.index):
     ax.annotate(sample, (pc1[i], pc2[i]),
                 textcoords='offset points', xytext=(6, 4),
-                fontsize=7, color='#333333')
+                fontsize=9, color="#333333")
 
 ax.axhline(0, color='#AAAAAA', lw=0.8, ls='--')
 ax.axvline(0, color='#AAAAAA', lw=0.8, ls='--')
-ax.set_xlabel(f'PC1 ({explained[0]:.1f}%)', fontsize=11)
-ax.set_ylabel(f'PC2 ({explained[1]:.1f}%)', fontsize=11)
-ax.set_title('Beta Diversity – Bray-Curtis PCoA', fontsize=13, fontweight='bold')
+ax.set_xlabel(f'PC1 ({explained[0]:.1f}%)', fontsize=12)
+ax.set_ylabel(f'PC2 ({explained[1]:.1f}%)', fontsize=12)
+ax.set_title('Beta Diversity – Bray-Curtis PCoA', fontsize=14, fontweight="bold")
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-ax.legend(title='Group', frameon=False, fontsize=10, title_fontsize=10)
+ax.legend(title='Group', frameon=False, fontsize=11, title_fontsize=11)
 
 plt.tight_layout()
 plt.savefig(f"{args.outdir}/beta_diversity_pcoa.pdf", dpi=300, bbox_inches='tight')

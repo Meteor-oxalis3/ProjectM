@@ -1,6 +1,6 @@
 <template>
 <v-app-bar color="primary" density="compact">
-      <img src="/favicon.ico" height="50px"></img>
+      <img src="/projectm_logo.png" height="50px"></img>
       <v-btn @click="redirectToIndex">ProjectM</v-btn>
       <!-- 隔断 -->
       <v-spacer></v-spacer>

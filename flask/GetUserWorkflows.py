@@ -1,6 +1,8 @@
 import os
 import time
 import uuid
+os.environ['TZ'] = 'Asia/Shanghai'
+time.tzset()
 
 def user_workflows(session, User, jsonify, WorkflowAlias, db):
     user_id = session.get('user_id')
